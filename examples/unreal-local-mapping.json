@@ -1,0 +1,14 @@
+{
+  "destination": "unreal",
+  "app": "aip-unreal-reference",
+  "envelopeId": "aip:epochs:emberblade:01",
+  "interpretation": {
+    "principle": "destination-sovereignty",
+    "note": "Unreal does not import EPOCHS combat stats. It maps a high-tier foreign weapon to a local cosmetic emblem.",
+    "localType": "cosmetic.emblem",
+    "localActor": "AIP_EmblemActor",
+    "slot": "player.banner",
+    "acceptedCapabilities": ["display"],
+    "ignoredCapabilities": ["equip"]
+  }
+}

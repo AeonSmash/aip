@@ -1,0 +1,13 @@
+{
+  "destination": "decentraland",
+  "app": "epochs",
+  "envelopeId": "aip:unreal-reference:sigil:01",
+  "interpretation": {
+    "principle": "destination-sovereignty",
+    "note": "Decentraland does not reproduce the Unreal game. It maps a foreign achievement-sigil to a museum collectible.",
+    "localType": "collectible.museum",
+    "localEntity": "CollectiblePedestal",
+    "acceptedCapabilities": ["display", "quest-flag"],
+    "ignoredCapabilities": ["equip"]
+  }
+}

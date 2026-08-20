@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AeonSmash/aip/raw/main/schemas/aip-envelope-0.1.schema.json",
+  "title": "AIP Envelope 0.1",
+  "description": "Public draft of a portable semantic envelope. A source world describes an object or event; a destination world decides what that description means locally.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["aip", "kind", "id", "type", "label", "source"],
+  "properties": {
+    "aip": {
+      "const": "0.1",
+      "description": "Envelope version."
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["object", "event", "identity"],
+      "description": "What this envelope carries."
+    },
+    "id": {
+      "type": "string",
+      "minLength": 8,
+      "description": "Stable identifier for this envelope subject. Not required to be globally unique across all software, but should be stable for a given source record."
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Semantic type using dotted namespaces, for example artifact.weapon or achievement.discovered."
+    },
+    "label": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world", "app"],
+      "properties": {
+        "world": { "type": "string", "description": "Runtime or world family, for example decentraland or unreal." },
+        "app": { "type": "string", "description": "Application or experience that originated the record." },
+        "scene": { "type": "string" },
+        "issuedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "origin": { "type": "string" },
+        "discoveredBy": { "type": "string" },
+        "history": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "power": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scale", "tier"],
+          "properties": {
+            "scale": { "const": "relative" },
+            "tier": {
+              "type": "string",
+              "enum": ["low", "mid", "high", "exceptional"]
+            },
+            "basis": { "type": "string", "description": "What the relative tier was measured against in the source world." }
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Source-offered verbs. Destinations may ignore any capability they do not implement."
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "owner": { "type": "string" },
+        "transferable": { "type": "boolean" },
+        "displayable": { "type": "boolean" }
+      }
+    },
+    "representation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "glb": { "type": "string", "description": "Optional portable mesh reference. Appearance is not the interoperability claim." }
+      }
+    }
+  }
+}

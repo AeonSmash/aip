@@ -1,0 +1,34 @@
+{
+  "aip": "0.1",
+  "kind": "object",
+  "id": "aip:epochs:emberblade:01",
+  "type": "artifact.weapon",
+  "label": "Emberblade",
+  "source": {
+    "world": "decentraland",
+    "app": "epochs",
+    "scene": "tower-cartridge",
+    "issuedAt": "2026-08-19T21:00:00Z"
+  },
+  "provenance": {
+    "origin": "EPOCHS Tower",
+    "discoveredBy": "player:aeonic-exemplar",
+    "history": ["forged in-world", "earned through play"]
+  },
+  "context": {
+    "power": {
+      "scale": "relative",
+      "tier": "high",
+      "basis": "EPOCHS local weapon curve"
+    }
+  },
+  "capabilities": ["equip", "display", "quest-flag"],
+  "rights": {
+    "owner": "player:aeonic-exemplar",
+    "transferable": false,
+    "displayable": true
+  },
+  "representation": {
+    "glb": "examples/meshes/emberblade.glb"
+  }
+}
