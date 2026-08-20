@@ -4,20 +4,20 @@
   <rect width="920" height="360" fill="#0b0f14"/>
   <rect x="24" y="88" width="220" height="160" rx="16" fill="#15202b" stroke="#3d6b7a"/>
   <text x="134" y="148" fill="#d7e6ee" font-family="Segoe UI, sans-serif" font-size="18" text-anchor="middle">Source world</text>
-  <text x="134" y="176" fill="#8fb3c2" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">Decentraland / EPOCHS</text>
-  <text x="134" y="204" fill="#e8a54b" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">Emberblade exists</text>
+  <text x="134" y="176" fill="#8fb3c2" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">example runtime</text>
+  <text x="134" y="204" fill="#e8a54b" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">object exists</text>
   <path d="M244 168 H 318" stroke="#e8a54b" stroke-width="3"/>
   <polygon points="318,160 336,168 318,176" fill="#e8a54b"/>
   <rect x="336" y="64" width="248" height="208" rx="16" fill="#1a140c" stroke="#e8a54b"/>
   <text x="460" y="108" fill="#e8a54b" font-family="Segoe UI, sans-serif" font-size="18" text-anchor="middle">AIP envelope</text>
-  <text x="460" y="142" fill="#d7e6ee" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">type ∑ provenance</text>
+  <text x="460" y="142" fill="#d7e6ee" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">type ù provenance</text>
   <text x="460" y="166" fill="#d7e6ee" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">relative power</text>
-  <text x="460" y="190" fill="#d7e6ee" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">capabilities ∑ rights</text>
+  <text x="460" y="190" fill="#d7e6ee" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">capabilities ù rights</text>
   <text x="460" y="226" fill="#8fb3c2" font-family="Segoe UI, sans-serif" font-size="12" text-anchor="middle">meaning, not mechanics</text>
   <path d="M584 168 H 658" stroke="#4cc3d9" stroke-width="3"/>
   <polygon points="658,160 676,168 658,176" fill="#4cc3d9"/>
   <rect x="676" y="88" width="220" height="160" rx="16" fill="#102028" stroke="#4cc3d9"/>
   <text x="786" y="148" fill="#d7e6ee" font-family="Segoe UI, sans-serif" font-size="18" text-anchor="middle">Destination</text>
-  <text x="786" y="176" fill="#8fb3c2" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">Unreal Engine</text>
-  <text x="786" y="204" fill="#4cc3d9" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">local emblem</text>
+  <text x="786" y="176" fill="#8fb3c2" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">example runtime</text>
+  <text x="786" y="204" fill="#4cc3d9" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">local meaning</text>
 </svg>

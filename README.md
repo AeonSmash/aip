@@ -35,8 +35,8 @@ This repository is the public presentation of AIP. It is intentionally small. In
 | --- | --- |
 | [`schemas/aip-envelope-0.1.schema.json`](schemas/aip-envelope-0.1.schema.json) | Draft envelope schema |
 | [`examples/emberblade.aip.json`](examples/emberblade.aip.json) | Example object from an independent runtime |
-| [`examples/unreal-local-mapping.json`](examples/unreal-local-mapping.json) | How Unreal might interpret that object |
-| [`examples/decentraland-local-mapping.json`](examples/decentraland-local-mapping.json) | How Decentraland might interpret a foreign object |
+| [`examples/unreal-local-mapping.json`](examples/unreal-local-mapping.json) | Example: how an Unreal destination *might* interpret that object |
+| [`examples/decentraland-local-mapping.json`](examples/decentraland-local-mapping.json) | Example: how a Decentraland destination *might* interpret a foreign object |
 | [`docs/architecture.md`](docs/architecture.md) | Destination sovereignty and engine-neutral adapters |
 | [`explainer/index.html`](explainer/index.html) | 90-second visual walkthrough |
 
@@ -46,10 +46,10 @@ Open `explainer/index.html` in a browser and press **Record**. That page is mean
 
 ```mermaid
 flowchart LR
-  S["Source world<br/>Decentraland / EPOCHS"]
+  S["Any source world"]
   E["AIP envelope<br/>type · provenance · relative power · capabilities · rights"]
-  D1["Unreal Engine<br/>maps to a local emblem"]
-  D2["Other runtime<br/>maps under its own rules"]
+  D1["Destination A<br/>local interpretation"]
+  D2["Destination B<br/>local interpretation"]
 
   S -->|describe| E
   E -->|interpret| D1
@@ -58,23 +58,23 @@ flowchart LR
 
 AIP does not require coordinate systems, gameplay stats, or item databases to become identical. It carries enough semantic context for each destination to decide.
 
-Adapters are the funded, concrete work. The protocol stays engine-neutral:
+Adapters are optional. The protocol stays engine-neutral:
 
 ```text
-Decentraland / web / Three.js
+Independent runtime A
         ↕
-       AIP
+     AIP Core
         ↕
-   Unreal Engine
+Independent runtime B
 ```
 
-Unreal is a reference implementation, not a requirement of AIP Core.
+No particular engine or world is a requirement of AIP Core. Unreal, Decentraland, web/Three.js, and other runtimes are example adapters only. They are useful for demonstrations. They are not part of the core.
 
 ## Current status
 
 **Prototype / in development.**
 
-Existing AeonSmash work — interactive Decentraland worlds, cartridge/runtime systems, wearables, backend services, and asset tooling — is how the problem was found. This repository is the public protocol surface. A playable Unreal reference implementation is the next milestone.
+Existing AeonSmash work is how the problem was found, not a dependency of the protocol. This repository is the public protocol surface. A playable reference adapter in a real-time 3D engine is the next milestone.
 
 AIP does **not** require:
 
@@ -82,12 +82,13 @@ AIP does **not** require:
 - a mandatory blockchain
 - a common economy
 - a single engine
+- Decentraland, Unreal, or any other specific platform
 
 ## Roadmap
 
 1. Freeze a tiny public envelope and examples *(this repo)*
-2. Unreal Engine adapter / SDK and a small reference level
-3. Bidirectional demonstration: Unreal ↔ AIP ↔ an independent runtime
+2. A real-time 3D adapter / SDK and a small reference level
+3. Bidirectional demonstration between two independent runtimes
 4. Validation, diagnostics, and conformance fixtures
 5. Documentation and sample integrations other developers can run
 

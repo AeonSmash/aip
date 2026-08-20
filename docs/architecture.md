@@ -21,7 +21,7 @@ A destination may:
 
 Source-world statistics are never authoritative gameplay values in another game.
 
-Example: EPOCHS describes Emberblade as `artifact.weapon` with relative power `high`. An Unreal reference game can map that to a cosmetic emblem. A Decentraland scene can map a foreign Unreal sigil to a museum collectible. Neither destination reproduces the source's combat system.
+Worked example only: an independent RPG describes Emberblade as `artifact.weapon` with relative power `high`. One destination might map that to a cosmetic emblem. Another might map a foreign sigil to a museum collectible. Neither destination reproduces the source's combat system. Neither destination is required by AIP Core.
 
 ## Engine-neutral core, runtime adapters
 
@@ -33,11 +33,11 @@ Example: EPOCHS describes Emberblade as `artifact.weapon` with relative power `h
                     └──────────┬──────────┘
            ┌───────────────────┼───────────────────┐
            ▼                   ▼                   ▼
-   Decentraland adapter   Unreal adapter     Other adapters
-   (independent runtime)  (grant milestone)  (future)
+     Example adapter      Example adapter      Other adapters
+     (optional)           (optional)           (optional)
 ```
 
-The Unreal adapter is important because it makes the protocol visible in real-time 3D. It is not a requirement of the core.
+Named worlds in this repo (Unreal, Decentraland, EPOCHS, web/Three.js) are demonstration adapters. None of them is a requirement of AIP Core. A real-time 3D adapter is useful because it makes the protocol visible. Visibility is not the same as a core dependency.
 
 Optional mesh references (`representation.glb`) can travel with an envelope. Appearance is supporting evidence, not the claim. The claim is that **meaning** can cross worlds that do not share coordinates, engines, databases, or rules.
 
@@ -46,6 +46,7 @@ Optional mesh references (`representation.glb`) can travel with an envelope. App
 - Not a finished standard
 - Not a live network protocol
 - Not a blockchain layer
+- Not tied to Decentraland, Unreal, or any other specific platform
 - Not a requirement that destinations spawn the source's exact item
 
 Those lines are deliberate. They keep later geospatial (Cesium) and public-goods (NLnet) work complementary instead of duplicated.

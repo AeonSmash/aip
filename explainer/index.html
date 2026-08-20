@@ -181,11 +181,11 @@
       <div class="worlds">
         <div class="world dcl">
           <div>
-            <p class="kicker">World A</p>
-            <h2>Decentraland</h2>
+            <p class="kicker">Example world A</p>
+            <h2>Independent runtime</h2>
             <p class="item">Emberblade</p>
           </div>
-          <p class="lede">A weapon earned in EPOCHS. Local rules, local stats, local database.</p>
+          <p class="lede">A weapon earned in one game. Local rules, local stats, local database.</p>
         </div>
         <div class="arrow">
           <div style="font-size: 42px;">≠</div>
@@ -193,11 +193,11 @@
         </div>
         <div class="world ue">
           <div>
-            <p class="kicker">World B</p>
-            <h2>Unreal Engine</h2>
+            <p class="kicker">Example world B</p>
+            <h2>Another runtime</h2>
             <p class="item cyan">Empty slot</p>
           </div>
-          <p class="lede">A different runtime. It cannot use EPOCHS combat values as authority.</p>
+          <p class="lede">A different engine. It cannot use the first game's combat values as authority.</p>
         </div>
       </div>
     </section>
@@ -207,7 +207,7 @@
         <h2>The object becomes an AIP envelope.</h2>
         <div class="json">
           type: <b>artifact.weapon</b><br />
-          provenance: EPOCHS Tower · earned through play<br />
+          provenance: earned through play in the source world<br />
           power: <b>relative / high</b> — not a damage number<br />
           capabilities: equip · display · quest-flag
         </div>
@@ -218,7 +218,7 @@
         <div class="world dcl">
           <div>
             <p class="kicker">Same envelope</p>
-            <h2>Decentraland</h2>
+            <h2>Runtime A</h2>
             <p class="item">Museum collectible</p>
           </div>
           <p class="lede">Destination maps a foreign object to a display piece. Combat is not imported.</p>
@@ -230,32 +230,32 @@
         <div class="world ue">
           <div>
             <p class="kicker">Same envelope</p>
-            <h2>Unreal Engine</h2>
+            <h2>Runtime B</h2>
             <p class="item cyan">Cosmetic emblem</p>
           </div>
-          <p class="lede">Unreal maps high-tier foreign weapon context to a local banner, under its own rules.</p>
+          <p class="lede">The second runtime maps high-tier foreign weapon context to a local banner, under its own rules.</p>
         </div>
       </div>
     </section>
     <section class="scene" data-scene="4">
       <div>
         <p class="kicker">Bidirectional</p>
-        <h2>Unreal can describe. Decentraland can interpret.</h2>
-        <p class="lede">The protocol is not a one-way importer into Unreal. An achievement-sigil from an Unreal reference level can become a collectible in an independent world.</p>
+        <h2>Either world can describe. Either world can interpret.</h2>
+        <p class="lede">The protocol is not a one-way importer into any engine. An achievement-sigil from one reference level can become a collectible in another independent world.</p>
       </div>
     </section>
     <section class="scene" data-scene="5">
       <div>
         <p class="kicker">Architectural test</p>
         <h2>Communicate meaning.<br />Do not seize control.</h2>
-        <p class="principle">No shared database. No mandatory blockchain. No single engine. Unreal is a reference implementation, not a requirement of AIP.</p>
+        <p class="principle">No shared database. No mandatory blockchain. No single engine. Unreal and Decentraland are example adapters, not requirements of AIP Core.</p>
       </div>
     </section>
     <section class="scene" data-scene="6">
       <div>
         <p class="kicker">Next milestone</p>
-        <h2>An open Unreal reference implementation.</h2>
-        <p class="lede">Adapter, schemas, destination mapping, validation, and a public demonstration other developers can inspect.</p>
+        <h2>An open real-time 3D reference implementation.</h2>
+        <p class="lede">Adapter, schemas, destination mapping, validation, and a public demonstration other developers can inspect. The first reference engine can be Unreal without making Unreal, or any other world, part of AIP Core.</p>
       </div>
     </section>
     <div class="countdown" id="countdown"></div>
@@ -264,12 +264,12 @@
   <script>
     const scenes = [
       { duration: 10000, caption: "Independent games can share context without sharing a world." },
-      { duration: 12000, caption: "Today, an object in Decentraland is invisible to Unreal — and the reverse is also true." },
+      { duration: 12000, caption: "Today, an object in one runtime is invisible to another — they share neither engine nor database." },
       { duration: 14000, caption: "AIP carries meaning: type, provenance, relative power, capabilities, and rights." },
       { duration: 14000, caption: "Each destination interprets the same envelope under its own rules." },
-      { duration: 10000, caption: "The path is reversible: Unreal can be a source as well as a destination." },
+      { duration: 10000, caption: "The path is reversible: any participating runtime can be a source as well as a destination." },
       { duration: 10000, caption: "The destination stays sovereign." },
-      { duration: 8000, caption: "The next stage is a working Unreal reference implementation and open SDK." }
+      { duration: 8000, caption: "The next stage is a working real-time 3D reference implementation and open SDK." }
     ];
     const total = scenes.reduce((sum, scene) => sum + scene.duration, 0);
     const clock = document.getElementById("clock");
