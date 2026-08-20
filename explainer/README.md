@@ -1,5 +1,9 @@
 # Recording the 90-second explainer
 
+Local capture: `explainer.mp4` (kept on disk, not in git — GitHub is a poor host for a 90 MB movie, and Epic needs a watchable URL).
+
+Upload that file to YouTube as **Unlisted**, then paste the YouTube link into Epic’s project media field.
+
 The page is a timed walkthrough, about **1:18**. You do not need Unreal footage.
 
 ## Fast path
