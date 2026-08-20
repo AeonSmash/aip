@@ -2,6 +2,8 @@
 
 An open semantic interoperability protocol for independent games and real-time 3D worlds.
 
+[Explainer video](https://youtu.be/3D2cgt-ajlE) · [Public draft](#public-draft-01)
+
 A source world can describe an object, event, or identity. A destination world decides what that description means locally. Worlds do not share a database, engine, economy, or blockchain.
 
 ```text
@@ -40,7 +42,7 @@ This repository is the public presentation of AIP. It is intentionally small. In
 | [`docs/architecture.md`](docs/architecture.md) | Destination sovereignty and engine-neutral adapters |
 | [`explainer/index.html`](explainer/index.html) | 90-second visual walkthrough |
 
-Open `explainer/index.html` in a browser and press **Record**. That page is meant to be screen-captured for grant reviewers and talks.
+Watch the recorded explainer: https://youtu.be/3D2cgt-ajlE
 
 ## Architecture
 
