@@ -6,7 +6,7 @@ Published explainer: https://youtu.be/3D2cgt-ajlE
 
 That YouTube URL is the Epic MegaGrants project media link.
 
-The page is a timed walkthrough, about **1:18**. You do not need Unreal footage.
+Open `explainer/index.html` in a browser (Chrome/Edge). Click **Play**. The YouTube video and the captions run together. `file://` sometimes blocks the YouTube API; if the player is blank, use a local server or the site page after deploy (`https://aeonsmash.com/#aip`).
 
 ## Fast path
 

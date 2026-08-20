@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>AIP — 90 second explainer</title>
   <style>
     :root {
@@ -24,104 +25,204 @@
     }
     body {
       display: grid;
-      grid-template-rows: auto 1fr auto;
+      grid-template-rows: auto auto 1fr auto;
       min-height: 100%;
     }
-    header, footer {
-      padding: 16px 28px;
+    header {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    footer {
+      padding: 12px 28px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 16px 20px;
+      border-top: 1px solid var(--line);
     }
-    header {
-      border-bottom: 1px solid var(--line);
+    .caption {
+      min-width: 0;
+      font-size: 18px;
+      line-height: 1.4;
+      flex: 1;
     }
+    .repo-link {
+      flex: 0 0 auto;
+      color: var(--ember);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .repo-link:hover { text-decoration: underline; }
     .brand {
       letter-spacing: 0.16em;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--ember);
       text-transform: uppercase;
+      flex: 0 0 auto;
+      max-width: 140px;
+      line-height: 1.3;
+    }
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 0 0 auto;
     }
     .clock {
       font-variant-numeric: tabular-nums;
       color: var(--muted);
       font-size: 13px;
     }
-    main {
-      position: relative;
-      overflow: hidden;
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(340px, 1fr);
+      gap: 24px;
+      min-height: 0;
+      padding: 16px 28px 8px;
+      align-items: stretch;
     }
-    .scene {
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      background: #000;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      align-self: center;
+    }
+    .video-wrap > iframe,
+    .video-wrap video,
+    .video-wrap #yt-player {
       position: absolute;
       inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      object-fit: contain;
+      background: #000;
+    }
+    .copy {
+      position: relative;
+      min-height: 0;
+      overflow: auto;
+      display: grid;
+      align-content: center;
+    }
+    .scene {
       display: none;
-      padding: 36px 48px 28px;
+      padding: 8px 4px 8px 8px;
     }
     .scene.active { display: grid; }
+    .video-hit {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      border: 0;
+      padding: 0;
+      border-radius: inherit;
+      background: transparent;
+      cursor: pointer;
+    }
+    .video-hit:not(.playing)::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 18px 0 18px 30px;
+      border-color: transparent transparent transparent rgba(232, 165, 75, 0.92);
+      transform: translate(-40%, -50%);
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
+      pointer-events: none;
+    }
+    .video-hit.playing { cursor: pointer; }
+    .video-hit.playing::after { display: none; }
+    .github-panel {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: none;
+      grid-template-rows: auto 1fr;
+      background: #0d1117;
+      color: #e6edf3;
+      overflow: hidden;
+    }
+    .github-panel.show { display: grid; }
+    .github-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #30363d;
+      font-size: 13px;
+    }
+    .github-bar a { color: var(--ember); }
+    .github-readme {
+      margin: 0;
+      padding: 14px 16px 18px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-family: Consolas, "Cascadia Mono", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+    }
     h1, h2, p { margin: 0; }
-    h1 { font-size: clamp(32px, 5vw, 64px); line-height: 1.05; font-weight: 650; }
-    h2 { font-size: clamp(26px, 3.4vw, 42px); line-height: 1.15; font-weight: 650; }
-    .lede { margin-top: 18px; max-width: 720px; color: var(--muted); font-size: 20px; line-height: 1.45; }
+    h1 { font-size: clamp(22px, 2.2vw, 36px); line-height: 1.12; font-weight: 650; }
+    h2 { font-size: clamp(18px, 1.8vw, 28px); line-height: 1.2; font-weight: 650; }
+    .lede { margin-top: 12px; color: var(--muted); font-size: 16px; line-height: 1.45; }
     .worlds {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
-      gap: 24px;
+      gap: 12px;
       align-items: stretch;
-      height: 100%;
     }
     .world {
       border: 1px solid var(--line);
-      border-radius: 18px;
+      border-radius: 14px;
       background: var(--panel);
-      padding: 28px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
     .world.dcl { border-color: #3d6b7a; }
     .world.ue { border-color: var(--cyan); }
-    .kicker { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-    .item {
-      margin-top: 28px;
-      font-size: 28px;
-      color: var(--ember);
-    }
+    .kicker { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .item { margin-top: 18px; font-size: 22px; color: var(--ember); }
     .item.cyan { color: var(--cyan); }
     .arrow {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-width: 160px;
+      min-width: 72px;
       color: var(--ember);
       text-align: center;
-      gap: 10px;
+      gap: 8px;
+      font-size: 13px;
     }
     .json {
-      margin-top: 24px;
+      margin-top: 16px;
       background: #0b1218;
       border: 1px solid var(--line);
       border-radius: 12px;
-      padding: 18px 20px;
+      padding: 14px 16px;
       font-family: Consolas, "Cascadia Mono", monospace;
-      font-size: 15px;
+      font-size: 14px;
       line-height: 1.55;
       color: #c5dde8;
-      max-width: 680px;
     }
     .json b { color: var(--ember); font-weight: 600; }
-    .caption {
-      border-top: 1px solid var(--line);
-      padding: 18px 28px 22px;
-      min-height: 88px;
-      font-size: 20px;
-      line-height: 1.4;
-    }
-    .bar {
-      height: 4px;
-      background: #18222a;
-    }
+    .bar { height: 4px; background: #18222a; }
     .bar > span {
       display: block;
       height: 100%;
@@ -137,10 +238,7 @@
       padding: 8px 14px;
       cursor: pointer;
     }
-    button.primary {
-      border-color: var(--ember);
-      color: var(--ember);
-    }
+    button.primary { border-color: var(--ember); color: var(--ember); }
     .countdown {
       position: absolute;
       inset: 0;
@@ -149,152 +247,386 @@
       background: rgba(7, 11, 16, 0.72);
       font-size: 96px;
       letter-spacing: 0.08em;
+      z-index: 2;
     }
     .countdown.show { display: grid; }
-    .principle {
-      margin-top: 28px;
-      font-size: 28px;
-      max-width: 800px;
+    .principle { margin-top: 20px; font-size: 22px; }
+    .deck {
+      display: grid;
+      grid-template-columns: 240px auto;
+      gap: 6px;
+      align-items: stretch;
+      padding: 5px 6px;
+      flex: 0 0 auto;
+      margin-left: auto;
+      background: linear-gradient(180deg, #4a4e54 0%, #24262b 14%, #16181c 100%);
+      border: 1px solid #070809;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.55);
+    }
+    .lcd {
+      position: relative;
+      overflow: hidden;
+      padding: 4px 8px 3px;
+      background: radial-gradient(120% 80% at 50% 0%, #163222 0%, #08150e 55%, #06110b 100%);
+      border: 2px solid #0c1a12;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.75), inset 0 0 0 1px #1a3d28;
+      color: #9dff86;
+      font-family: "Lucida Console", "Courier New", monospace;
+      text-shadow: 0 0 6px rgba(120, 255, 140, 0.45);
+    }
+    .lcd::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.16) 0,
+        rgba(0, 0, 0, 0.16) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+    }
+    .lcd-face {
+      position: relative;
+      z-index: 1;
+    }
+    .lcd-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      opacity: 0.82;
+    }
+    .lcd-title {
+      margin-top: 2px;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 100%;
+    }
+    .lcd-marquee {
+      display: inline-block;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      animation: lcd-scroll 18s linear infinite;
+    }
+    @keyframes lcd-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .deck-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .lcd-btn {
+      min-width: 64px;
+      flex: 1;
+      border-radius: 3px;
+      border: 1px solid #0b0c0e;
+      background: linear-gradient(180deg, #5a5f66 0%, #2c3036 55%, #1e2126 100%);
+      color: #d5dae0;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      font-family: "Lucida Console", monospace;
+      padding: 4px 6px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 2px 0 #0a0b0d;
+    }
+    .lcd-btn:active {
+      transform: translateY(1px);
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55);
+    }
+    .lcd-btn.on {
+      color: #9dff86;
+      text-shadow: 0 0 8px rgba(120, 255, 140, 0.5);
+    }
+    #deck-audio { display: none; }
+    @media (max-width: 900px) {
+      header { flex-wrap: wrap; }
+      .stage { grid-template-columns: 1fr; }
+      .copy { min-height: 280px; }
+      footer { flex-wrap: wrap; }
+      .repo-link { order: 3; white-space: normal; }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="brand">Aeonic Interoperability Protocol</div>
-    <div class="clock" id="clock">00:00 / 01:18</div>
-    <div class="controls">
-      <button type="button" id="play">Play</button>
-      <button type="button" class="primary" id="record">Record</button>
-      <button type="button" id="restart">Restart</button>
+    <div class="header-right">
+      <div class="clock" id="clock">00:00 / 02:11</div>
+      <div class="controls">
+        <button type="button" class="primary" id="play">Play</button>
+        <button type="button" id="restart">Restart</button>
+      </div>
     </div>
   </header>
   <div class="bar"><span id="progress"></span></div>
-  <main>
-    <section class="scene active" data-scene="0">
-      <div>
-        <p class="kicker">Open protocol · real-time 3D</p>
-        <h1>Games should exchange meaning, not databases.</h1>
-        <p class="lede">AIP lets independent worlds describe objects, events, and provenance. Each destination keeps control over what that information becomes.</p>
+  <audio id="deck-audio" preload="metadata"></audio>
+  <div class="stage">
+    <div class="video-wrap">
+      <video id="local-player" src="explainer.mp4" playsinline preload="metadata" muted></video>
+      <iframe
+        id="yt-frame"
+        title="AIP explainer"
+        src="https://www.youtube.com/embed/3D2cgt-ajlE?enablejsapi=1&rel=0&modestbranding=1&playsinline=1"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+        hidden
+      ></iframe>
+      <button type="button" class="video-hit" id="video-hit" aria-label="Play video"></button>
+      <div class="github-panel" id="github-panel">
+        <div class="github-bar">
+          <a href="https://github.com/AeonSmash/aip" target="_blank" rel="noreferrer">github.com/AeonSmash/aip</a>
+          <span>opened after 2:11</span>
+        </div>
+        <pre class="github-readme" id="github-readme">Loading repository…</pre>
       </div>
-    </section>
-    <section class="scene" data-scene="1">
-      <div class="worlds">
-        <div class="world dcl">
-          <div>
-            <p class="kicker">Example world A</p>
-            <h2>Independent runtime</h2>
-            <p class="item">Emberblade</p>
+    </div>
+    <div class="copy" id="copy">
+      <section class="scene active" data-scene="0">
+        <div>
+          <p class="kicker">Open protocol · real-time 3D</p>
+          <h1>Games should exchange meaning, not databases.</h1>
+          <p class="lede">AIP lets independent worlds describe objects, events, and provenance. Each destination keeps control over what that information becomes.</p>
+        </div>
+      </section>
+      <section class="scene" data-scene="1">
+        <div class="worlds">
+          <div class="world dcl">
+            <div>
+              <p class="kicker">Example world A</p>
+              <h2>Independent runtime</h2>
+              <p class="item">Emberblade</p>
+            </div>
+            <p class="lede">A weapon earned in one game. Local rules, local stats, local database.</p>
           </div>
-          <p class="lede">A weapon earned in one game. Local rules, local stats, local database.</p>
-        </div>
-        <div class="arrow">
-          <div style="font-size: 42px;">≠</div>
-          <div>No shared engine<br/>No shared database</div>
-        </div>
-        <div class="world ue">
-          <div>
-            <p class="kicker">Example world B</p>
-            <h2>Another runtime</h2>
-            <p class="item cyan">Empty slot</p>
+          <div class="arrow">
+            <div style="font-size: 32px;">≠</div>
+            <div>No shared engine</div>
           </div>
-          <p class="lede">A different engine. It cannot use the first game's combat values as authority.</p>
-        </div>
-      </div>
-    </section>
-    <section class="scene" data-scene="2">
-      <div>
-        <p class="kicker">Source describes</p>
-        <h2>The object becomes an AIP envelope.</h2>
-        <div class="json">
-          type: <b>artifact.weapon</b><br />
-          provenance: earned through play in the source world<br />
-          power: <b>relative / high</b> — not a damage number<br />
-          capabilities: equip · display · quest-flag
-        </div>
-      </div>
-    </section>
-    <section class="scene" data-scene="3">
-      <div class="worlds">
-        <div class="world dcl">
-          <div>
-            <p class="kicker">Same envelope</p>
-            <h2>Runtime A</h2>
-            <p class="item">Museum collectible</p>
+          <div class="world ue">
+            <div>
+              <p class="kicker">Example world B</p>
+              <h2>Another runtime</h2>
+              <p class="item cyan">Empty slot</p>
+            </div>
+            <p class="lede">A different engine. It cannot use the first game’s combat values as authority.</p>
           </div>
-          <p class="lede">Destination maps a foreign object to a display piece. Combat is not imported.</p>
         </div>
-        <div class="arrow">
-          <div style="font-size: 28px;">AIP</div>
-          <div>one description<br/>two interpretations</div>
-        </div>
-        <div class="world ue">
-          <div>
-            <p class="kicker">Same envelope</p>
-            <h2>Runtime B</h2>
-            <p class="item cyan">Cosmetic emblem</p>
+      </section>
+      <section class="scene" data-scene="2">
+        <div>
+          <p class="kicker">Source describes</p>
+          <h2>The object becomes an AIP envelope.</h2>
+          <div class="json">
+            type: <b>artifact.weapon</b><br />
+            provenance: earned through play in the source world<br />
+            power: <b>relative / high</b> — not a damage number<br />
+            capabilities: equip · display · quest-flag
           </div>
-          <p class="lede">The second runtime maps high-tier foreign weapon context to a local banner, under its own rules.</p>
+        </div>
+      </section>
+      <section class="scene" data-scene="3">
+        <div class="worlds">
+          <div class="world dcl">
+            <div>
+              <p class="kicker">Same envelope</p>
+              <h2>Runtime A</h2>
+              <p class="item">Museum collectible</p>
+            </div>
+            <p class="lede">Destination maps a foreign object to a display piece.</p>
+          </div>
+          <div class="arrow">
+            <div style="font-size: 22px;">AIP</div>
+            <div>one description</div>
+          </div>
+          <div class="world ue">
+            <div>
+              <p class="kicker">Same envelope</p>
+              <h2>Runtime B</h2>
+              <p class="item cyan">Cosmetic emblem</p>
+            </div>
+            <p class="lede">The second runtime maps it under its own rules.</p>
+          </div>
+        </div>
+      </section>
+      <section class="scene" data-scene="4">
+        <div>
+          <p class="kicker">Bidirectional</p>
+          <h2>Either world can describe. Either world can interpret.</h2>
+          <p class="lede">The protocol is not a one-way importer into any engine.</p>
+        </div>
+      </section>
+      <section class="scene" data-scene="5">
+        <div>
+          <p class="kicker">Architectural test</p>
+          <h2>Communicate meaning.<br />Do not seize control.</h2>
+          <p class="principle">No shared database. No mandatory blockchain. No single engine. Named worlds are example adapters, not requirements of AIP Core.</p>
+        </div>
+      </section>
+      <section class="scene" data-scene="6">
+        <div>
+          <p class="kicker">Next milestone</p>
+          <h2>An open real-time 3D reference implementation.</h2>
+          <p class="lede">The first reference engine can be Unreal without making Unreal, or any other world, part of AIP Core.</p>
+        </div>
+      </section>
+      <div class="countdown" id="countdown"></div>
+    </div>
+  </div>
+  <footer>
+    <div class="caption" id="caption">Independent games can share context without sharing a world.</div>
+    <a class="repo-link" href="https://github.com/AeonSmash/aip" target="_blank" rel="noreferrer">github.com/AeonSmash/aip</a>
+    <div class="deck" aria-label="Audio player">
+      <div class="lcd">
+        <div class="lcd-face" id="lcd-face">
+          <div class="lcd-meta">
+            <span id="lcd-status">STOP  01/04</span>
+            <span id="lcd-time">00:00</span>
+          </div>
+          <div class="lcd-title">
+            <div class="lcd-marquee" id="lcd-marquee"></div>
+          </div>
         </div>
       </div>
-    </section>
-    <section class="scene" data-scene="4">
-      <div>
-        <p class="kicker">Bidirectional</p>
-        <h2>Either world can describe. Either world can interpret.</h2>
-        <p class="lede">The protocol is not a one-way importer into any engine. An achievement-sigil from one reference level can become a collectible in another independent world.</p>
+      <div class="deck-btns">
+        <button type="button" class="lcd-btn" id="lcd-play">PLAY</button>
+        <button type="button" class="lcd-btn" id="lcd-scroll">SCROLL</button>
       </div>
-    </section>
-    <section class="scene" data-scene="5">
-      <div>
-        <p class="kicker">Architectural test</p>
-        <h2>Communicate meaning.<br />Do not seize control.</h2>
-        <p class="principle">No shared database. No mandatory blockchain. No single engine. Unreal and Decentraland are example adapters, not requirements of AIP Core.</p>
-      </div>
-    </section>
-    <section class="scene" data-scene="6">
-      <div>
-        <p class="kicker">Next milestone</p>
-        <h2>An open real-time 3D reference implementation.</h2>
-        <p class="lede">Adapter, schemas, destination mapping, validation, and a public demonstration other developers can inspect. The first reference engine can be Unreal without making Unreal, or any other world, part of AIP Core.</p>
-      </div>
-    </section>
-    <div class="countdown" id="countdown"></div>
-  </main>
-  <footer class="caption" id="caption">Independent games can share context without sharing a world.</footer>
+    </div>
+  </footer>
   <script>
-    const scenes = [
-      { duration: 10000, caption: "Independent games can share context without sharing a world." },
-      { duration: 12000, caption: "Today, an object in one runtime is invisible to another — they share neither engine nor database." },
-      { duration: 14000, caption: "AIP carries meaning: type, provenance, relative power, capabilities, and rights." },
-      { duration: 14000, caption: "Each destination interprets the same envelope under its own rules." },
-      { duration: 10000, caption: "The path is reversible: any participating runtime can be a source as well as a destination." },
-      { duration: 10000, caption: "The destination stays sovereign." },
-      { duration: 8000, caption: "The next stage is a working real-time 3D reference implementation and open SDK." }
+    const VIDEO_ID = "3D2cgt-ajlE";
+    const LOCAL = location.protocol === "file:";
+    const tracks = [
+      { title: "FIRE AND EMBER", src: "audio/Fire and Ember.ogg" },
+      { title: "INTRIGUE", src: "audio/Intrigue.ogg" },
+      { title: "THE DEPTHS", src: "audio/the Depths.ogg" },
+      { title: "THOUGHTS", src: "audio/Thoughts.ogg" }
     ];
-    const total = scenes.reduce((sum, scene) => sum + scene.duration, 0);
+    let trackIndex = 0;
+    const audioEl = document.getElementById("deck-audio");
+    const lcdStatus = document.getElementById("lcd-status");
+    const lcdTime = document.getElementById("lcd-time");
+    const lcdMarquee = document.getElementById("lcd-marquee");
+    const lcdFace = document.getElementById("lcd-face");
+    const lcdPlayBtn = document.getElementById("lcd-play");
+    const localPlayer = document.getElementById("local-player");
+    const ytFrame = document.getElementById("yt-frame");
+    let dimAccum = 0;
+    let dimStamp = 0;
+
+    function padTrack(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function setMarquee(title) {
+      const unit = title + "   ·   ";
+      lcdMarquee.textContent = unit + unit + unit + unit;
+    }
+
+    function lcdDim() {
+      const faded = Math.max(0.04, 1 - dimAccum / 120000);
+      lcdFace.style.opacity = String(faded);
+    }
+
+    function renderDeck() {
+      const playing = !audioEl.paused && !audioEl.ended;
+      lcdStatus.textContent = (playing ? "PLAY" : "STOP") + "  " + padTrack(trackIndex + 1) + "/" + padTrack(tracks.length);
+      lcdPlayBtn.classList.toggle("on", playing);
+      lcdPlayBtn.textContent = playing ? "PAUSE" : "PLAY";
+      const t = Number.isFinite(audioEl.currentTime) ? audioEl.currentTime : 0;
+      lcdTime.textContent = String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(Math.floor(t % 60)).padStart(2, "0");
+      if (playing) {
+        const now = performance.now();
+        if (!dimStamp) dimStamp = now;
+        dimAccum += now - dimStamp;
+        dimStamp = now;
+      } else {
+        dimStamp = 0;
+      }
+      lcdDim();
+    }
+
+    function loadTrack(index, autoplay) {
+      trackIndex = (index + tracks.length) % tracks.length;
+      audioEl.src = encodeURI(tracks[trackIndex].src);
+      setMarquee(tracks[trackIndex].title);
+      dimAccum = 0;
+      dimStamp = 0;
+      lcdDim();
+      renderDeck();
+      if (autoplay) audioEl.play().catch(() => {});
+    }
+
+    lcdPlayBtn.addEventListener("click", () => {
+      if (!audioEl.src) loadTrack(trackIndex, false);
+      if (audioEl.paused) audioEl.play().catch(() => {});
+      else audioEl.pause();
+    });
+    document.getElementById("lcd-scroll").addEventListener("click", () => {
+      loadTrack(trackIndex + 1, !audioEl.paused);
+    });
+    audioEl.addEventListener("timeupdate", renderDeck);
+    audioEl.addEventListener("play", renderDeck);
+    audioEl.addEventListener("pause", renderDeck);
+    audioEl.addEventListener("ended", () => loadTrack(trackIndex + 1, true));
+    loadTrack(0, false);
+
+    const scenes = [
+      { duration: 16795, caption: "Independent games can share context without sharing a world." },
+      { duration: 20154, caption: "Today, an object in one runtime is invisible to another — they share neither engine nor database." },
+      { duration: 23513, caption: "AIP carries meaning: type, provenance, relative power, capabilities, and rights." },
+      { duration: 23513, caption: "Each destination interprets the same envelope under its own rules." },
+      { duration: 16795, caption: "The path is reversible: any participating runtime can be a source as well as a destination." },
+      { duration: 16795, caption: "The destination stays sovereign." },
+      { duration: 13435, caption: "The next stage is a working real-time 3D reference implementation and open SDK." }
+    ];
+    const textTotal = scenes.reduce((sum, scene) => sum + scene.duration, 0);
+    let videoTotal = 131000;
     const clock = document.getElementById("clock");
     const progress = document.getElementById("progress");
     const caption = document.getElementById("caption");
-    const countdownEl = document.getElementById("countdown");
     const sceneEls = [...document.querySelectorAll(".scene")];
+    const videoHit = document.getElementById("video-hit");
+    const githubPanel = document.getElementById("github-panel");
+    const githubReadme = document.getElementById("github-readme");
+    let githubLoaded = false;
     let timer = null;
     let startedAt = 0;
     let elapsed = 0;
     let running = false;
+    let player = null;
+    const useLocal = LOCAL || !ytFrame;
 
-    function format(ms) {
-      const s = Math.min(total, Math.max(0, ms)) / 1000;
-      const m = Math.floor(s / 60);
-      const r = Math.floor(s % 60);
-      return String(m).padStart(2, "0") + ":" + String(r).padStart(2, "0");
+    if (useLocal) {
+      ytFrame.hidden = true;
+      localPlayer.hidden = false;
+    } else {
+      localPlayer.hidden = true;
+      ytFrame.hidden = false;
+      if (location.origin && location.origin !== "null") {
+        ytFrame.src = "https://www.youtube.com/embed/" + VIDEO_ID +
+          "?enablejsapi=1&rel=0&modestbranding=1&playsinline=1&origin=" + encodeURIComponent(location.origin);
+      }
     }
 
-    function render(ms) {
-      elapsed = Math.min(ms, total);
+    function format(ms) {
+      const s = Math.min(Math.max(0, ms), Math.max(textTotal, videoTotal)) / 1000;
+      return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+    }
+
+    function applyScenes(ms) {
+      const t = Math.min(ms, textTotal);
       let acc = 0;
       let index = scenes.length - 1;
       for (let i = 0; i < scenes.length; i += 1) {
-        if (elapsed < acc + scenes[i].duration) {
+        if (t < acc + scenes[i].duration) {
           index = i;
           break;
         }
@@ -302,21 +634,72 @@
       }
       sceneEls.forEach((el, i) => el.classList.toggle("active", i === index));
       caption.textContent = scenes[index].caption;
-      progress.style.width = (elapsed / total * 100) + "%";
-      clock.textContent = format(elapsed) + " / " + format(total);
-      if (elapsed >= total) stop(true);
+    }
+
+    function span() {
+      return Math.max(textTotal, videoTotal);
+    }
+
+    function render(ms) {
+      elapsed = Math.min(ms, span());
+      applyScenes(elapsed);
+      progress.style.width = (elapsed / span() * 100) + "%";
+      clock.textContent = format(elapsed) + " / " + format(span());
+      if (elapsed >= span()) stop(true);
+    }
+
+    function videoMs() {
+      if (useLocal) {
+        if (localPlayer.duration > 1) videoTotal = localPlayer.duration * 1000;
+        return localPlayer.currentTime * 1000;
+      }
+      if (!player || typeof player.getCurrentTime !== "function") return null;
+      try {
+        const duration = player.getDuration();
+        if (duration > 1) videoTotal = duration * 1000;
+        return player.getCurrentTime() * 1000;
+      } catch (err) {
+        return null;
+      }
     }
 
     function tick() {
-      render(performance.now() - startedAt);
+      const fromVideo = videoMs();
+      render(fromVideo == null ? performance.now() - startedAt : fromVideo);
       if (running) timer = requestAnimationFrame(tick);
+    }
+
+    function playVideo() {
+      if (useLocal) {
+        if (elapsed < 400) localPlayer.currentTime = 0;
+        localPlayer.muted = true;
+        localPlayer.play().catch(() => {});
+        return;
+      }
+      try {
+        if (elapsed < 400) player.seekTo(0, true);
+        player.mute();
+        player.playVideo();
+      } catch (err) {}
+    }
+
+    function pauseVideo() {
+      if (useLocal) {
+        localPlayer.pause();
+        return;
+      }
+      try { player.pauseVideo(); } catch (err) {}
     }
 
     function play() {
       if (running) return;
+      hideGithub();
       running = true;
       startedAt = performance.now() - elapsed;
       document.getElementById("play").textContent = "Pause";
+      videoHit.classList.add("playing");
+      playVideo();
+      if (audioEl.paused) audioEl.play().catch(() => {});
       timer = requestAnimationFrame(tick);
     }
 
@@ -324,31 +707,94 @@
       running = false;
       cancelAnimationFrame(timer);
       document.getElementById("play").textContent = ended ? "Replay" : "Play";
-      if (ended) elapsed = total;
+      videoHit.classList.toggle("playing", false);
+      if (ended) {
+        elapsed = span();
+        showGithub();
+      } else {
+        pauseVideo();
+        audioEl.pause();
+      }
+    }
+
+    function hideGithub() {
+      githubPanel.classList.remove("show");
+      videoHit.hidden = false;
+    }
+
+    function showGithub() {
+      githubPanel.classList.add("show");
+      videoHit.hidden = true;
+      if (githubLoaded) return;
+      githubLoaded = true;
+      fetch("https://raw.githubusercontent.com/AeonSmash/aip/main/README.md")
+        .then((res) => res.ok ? res.text() : Promise.reject())
+        .then((text) => { githubReadme.textContent = text; })
+        .catch(() => {
+          githubReadme.textContent = "Open the public draft:\nhttps://github.com/AeonSmash/aip";
+        });
     }
 
     function restart() {
       stop(false);
+      hideGithub();
       elapsed = 0;
+      if (useLocal) {
+        localPlayer.currentTime = 0;
+        localPlayer.pause();
+      } else {
+        try { player.seekTo(0, true); player.pauseVideo(); } catch (err) {}
+      }
       render(0);
     }
 
     document.getElementById("play").addEventListener("click", () => {
-      if (elapsed >= total) restart();
+      if (elapsed >= span()) restart();
+      if (running) stop(false);
+      else play();
+    });
+    videoHit.addEventListener("click", () => {
+      if (elapsed >= span()) restart();
       if (running) stop(false);
       else play();
     });
     document.getElementById("restart").addEventListener("click", restart);
-    document.getElementById("record").addEventListener("click", async () => {
-      restart();
-      countdownEl.classList.add("show");
-      for (const n of [3, 2, 1]) {
-        countdownEl.textContent = n;
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-      countdownEl.classList.remove("show");
-      play();
+
+    localPlayer.addEventListener("loadedmetadata", () => {
+      if (localPlayer.duration > 1) videoTotal = localPlayer.duration * 1000;
+      render(0);
     });
+    localPlayer.addEventListener("ended", () => stop(true));
+
+    function mountPlayer() {
+      if (useLocal || !window.YT) return;
+      player = new YT.Player("yt-frame", {
+        events: {
+          onReady(event) {
+            const duration = event.target.getDuration();
+            if (duration > 1) videoTotal = duration * 1000;
+            try { event.target.mute(); } catch (err) {}
+            render(0);
+          },
+          onStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING && !running) play();
+            if (event.data === YT.PlayerState.PAUSED && running) stop(false);
+            if (event.data === YT.PlayerState.ENDED) stop(true);
+          },
+          onError() {
+            ytFrame.hidden = true;
+            localPlayer.hidden = false;
+          }
+        }
+      });
+    }
+
+    if (!useLocal) {
+      window.onYouTubeIframeAPIReady = mountPlayer;
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    }
     render(0);
   </script>
 </body>

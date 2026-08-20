@@ -41,6 +41,7 @@ This repository is the public presentation of AIP. It is intentionally small. In
 | [`examples/decentraland-local-mapping.json`](examples/decentraland-local-mapping.json) | Example: how a Decentraland destination *might* interpret a foreign object |
 | [`docs/architecture.md`](docs/architecture.md) | Destination sovereignty and engine-neutral adapters |
 | [`explainer/index.html`](explainer/index.html) | 90-second visual walkthrough |
+| [`CHANGELOG.md`](CHANGELOG.md) | Public presentation history |
 
 Watch the recorded explainer: https://youtu.be/3D2cgt-ajlE
 
