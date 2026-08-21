@@ -1,0 +1,24 @@
+{
+  "FileVersion": 3,
+  "Version": 2,
+  "VersionName": "0.2.0",
+  "FriendlyName": "AIP",
+  "Description": "Aeonic Interoperability Protocol adapter — load envelopes, apply destination-owned mappings, export sigils.",
+  "Category": "Interoperability",
+  "CreatedBy": "AeonSmash",
+  "CreatedByURL": "https://github.com/AeonSmash/aip",
+  "DocsURL": "https://github.com/AeonSmash/aip",
+  "MarketplaceURL": "",
+  "SupportURL": "",
+  "CanContainContent": false,
+  "IsBetaVersion": true,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Modules": [
+    {
+      "Name": "AIP",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}

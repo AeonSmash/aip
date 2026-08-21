@@ -37,14 +37,29 @@ This repository is the public presentation of AIP. It is intentionally small. In
 | --- | --- |
 | [`schemas/aip-envelope-0.1.schema.json`](schemas/aip-envelope-0.1.schema.json) | Draft envelope schema |
 | [`examples/emberblade.aip.json`](examples/emberblade.aip.json) | Example object from an independent runtime |
+| [`examples/arena-sigil.aip.json`](examples/arena-sigil.aip.json) | Example event from the Unreal reference |
 | [`examples/unreal-local-mapping.json`](examples/unreal-local-mapping.json) | Example: how an Unreal destination *might* interpret that object |
 | [`examples/decentraland-local-mapping.json`](examples/decentraland-local-mapping.json) | Example: how a Decentraland destination *might* interpret a foreign object |
+| [`mappings/unreal-fps.json`](mappings/unreal-fps.json) | Destination-owned FPS upgrade rules (runtime data) |
+| [`sdk/typescript/`](sdk/typescript/) | Validator, mapping resolver, CLI, tests |
+| [`exchange/`](exchange/) | File-drop inbox/outbox transport |
+| [`adapters/unreal/`](adapters/unreal/) | UE 5.8 First Person reference + AIP plugin |
 | [`docs/architecture.md`](docs/architecture.md) | Destination sovereignty and engine-neutral adapters |
 | [`explainer/index.html`](explainer/index.html) | 90-second visual walkthrough |
 | [`CHANGELOG.md`](CHANGELOG.md) | Public presentation history |
 
 Watch the recorded explainer: https://youtu.be/3D2cgt-ajlE
 
+### Quick CLI loop
+
+```bash
+cd sdk/typescript && npm install && npm test
+npm run aip -- exchange write-inbox ../../examples/emberblade.aip.json
+npm run aip -- map --destination unreal-fps ../../examples/emberblade.aip.json
+npm run aip -- map --destination decentraland ../../examples/arena-sigil.aip.json
+```
+
+Then open [`adapters/unreal/AIPReference/AIPReference.uproject`](adapters/unreal/AIPReference/AIPReference.uproject), Play, press **E** at the terminal, **F** to export.
 ## Architecture
 
 ```mermaid
@@ -75,9 +90,14 @@ No particular engine or world is a requirement of AIP Core. Unreal, Decentraland
 
 ## Current status
 
-**Prototype / in development.**
+**Prototype / in development — Unreal reference MVP in tree.**
 
-Existing AeonSmash work is how the problem was found, not a dependency of the protocol. This repository is the public protocol surface. A playable reference adapter in a real-time 3D engine is the next milestone.
+- TypeScript core validates and maps envelopes (`npm test` green)
+- File exchange contract under `exchange/`
+- Unreal 5.8 First Person reference compiles with the AIP Runtime plugin
+- Bidirectional demo path: inbox weapon → Unreal upgrade; Unreal sigil → Decentraland museum mapping via CLI
+
+Existing AeonSmash work is how the problem was found, not a dependency of the protocol.
 
 AIP does **not** require:
 
@@ -90,9 +110,9 @@ AIP does **not** require:
 ## Roadmap
 
 1. Freeze a tiny public envelope and examples *(this repo)*
-2. A real-time 3D adapter / SDK and a small reference level
-3. Bidirectional demonstration between two independent runtimes
-4. Validation, diagnostics, and conformance fixtures
+2. A real-time 3D adapter / SDK and a small reference level *(Unreal MVP — in progress)*
+3. Bidirectional demonstration between two independent runtimes *(file transport + CLI peer)*
+4. Validation, diagnostics, and conformance fixtures *(TypeScript tests — started)*
 5. Documentation and sample integrations other developers can run
 
 ## License

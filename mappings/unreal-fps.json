@@ -1,0 +1,48 @@
+{
+  "destination": "unreal-fps",
+  "app": "aip-unreal-reference",
+  "interpretation": {
+    "principle": "destination-sovereignty",
+    "note": "Fallback if no rule matches. Prefer rules[].",
+    "localType": "weapon.unmapped",
+    "upgrade": "none",
+    "damageMultiplier": 1.0,
+    "acceptedCapabilities": [],
+    "ignoredCapabilities": []
+  },
+  "rules": [
+    {
+      "match": {
+        "type": "artifact.weapon",
+        "powerTier": ["high", "exceptional"]
+      },
+      "interpretation": {
+        "principle": "destination-sovereignty",
+        "note": "Unreal FPS does not import foreign melee. A high-tier weapon becomes one local gun upgrade tier.",
+        "localType": "weapon.upgrade",
+        "localActor": "AIP_GunUpgrade",
+        "slot": "player.primary",
+        "upgrade": "tier1",
+        "damageMultiplier": 1.75,
+        "acceptedCapabilities": ["display"],
+        "ignoredCapabilities": ["equip", "quest-flag"]
+      }
+    },
+    {
+      "match": {
+        "type": "artifact.weapon",
+        "powerTier": ["low", "mid"]
+      },
+      "interpretation": {
+        "principle": "destination-sovereignty",
+        "note": "Lower-tier foreign weapons are acknowledged but do not upgrade the gun.",
+        "localType": "weapon.notice",
+        "slot": "player.hud",
+        "upgrade": "none",
+        "damageMultiplier": 1.0,
+        "acceptedCapabilities": ["display"],
+        "ignoredCapabilities": ["equip", "quest-flag"]
+      }
+    }
+  ]
+}

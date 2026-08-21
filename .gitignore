@@ -6,3 +6,44 @@ Thumbs.db
 *.mp4
 *.mov
 *.webm
+
+# Node / TypeScript SDK
+node_modules/
+sdk/typescript/dist/
+sdk/typescript/coverage/
+*.tsbuildinfo
+npm-debug.log*
+
+# Unreal Engine (adapters/unreal)
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Build/
+*.VC.db
+*.opensdf
+*.opendb
+*.sdf
+*.sln
+*.suo
+*.xcodeproj
+*.xcworkspace
+.vs/
+*.pdb
+*.exe
+*.dll
+*.dylib
+*.app
+FileOpenOrder/
+*.uprojectdirs
+
+# Local Unreal build noise
+adapters/unreal/build-log.txt
+adapters/unreal/**/*.sarif
+adapters/unreal/**/*.dep.json
+
+# Exchange runtime drops (keep .gitkeep)
+exchange/inbox/*.aip.json
+exchange/outbox/*.aip.json
+!exchange/inbox/.gitkeep
+!exchange/outbox/.gitkeep

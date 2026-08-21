@@ -1,0 +1,19 @@
+{
+  "aip": "0.1",
+  "kind": "event",
+  "id": "aip:unreal-reference:sigil:01",
+  "type": "achievement.sigil",
+  "label": "Arena Sigil",
+  "source": {
+    "world": "unreal",
+    "app": "aip-unreal-reference",
+    "scene": "lvl-first-person",
+    "issuedAt": "2026-08-21T03:55:00Z"
+  },
+  "provenance": {
+    "origin": "AIP Unreal Reference",
+    "discoveredBy": "player:local",
+    "history": ["earned in Unreal FPS arena"]
+  },
+  "capabilities": ["display", "quest-flag", "equip"]
+}
