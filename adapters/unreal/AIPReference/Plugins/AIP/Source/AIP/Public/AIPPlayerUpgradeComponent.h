@@ -28,6 +28,9 @@ public:
 	bool HasUpgrade() const { return bHasUpgrade; }
 
 	UFUNCTION(BlueprintPure, Category = "AIP")
+	bool HasLinkBeamUnlock() const { return bHasLinkBeamUnlock; }
+
+	UFUNCTION(BlueprintPure, Category = "AIP")
 	bool HasSniperUnlock() const { return bHasSniperUnlock; }
 
 	UFUNCTION(BlueprintPure, Category = "AIP")
@@ -45,6 +48,9 @@ public:
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "AIP")
 	bool bHasUpgrade = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "AIP")
+	bool bHasLinkBeamUnlock = false;
 
 	UPROPERTY(BlueprintReadOnly, Category = "AIP")
 	bool bHasSniperUnlock = false;

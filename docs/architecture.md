@@ -21,7 +21,7 @@ A destination may:
 
 Source-world statistics are never authoritative gameplay values in another game.
 
-Worked example only: an independent RPG describes Emberblade as `artifact.weapon` with relative power `high`. One destination might map that to a cosmetic emblem. Another might map a foreign sigil to a museum collectible. Neither destination reproduces the source's combat system. Neither destination is required by AIP Core.
+Worked example only: an independent RPG describes Emberblade as `artifact.weapon` with relative power `high`. One destination might map that to a cosmetic emblem. Another might map a foreign sigil to a museum collectible. A web CRT switch can emit `signal.breaker`; Unreal FPS maps that event to unlocking a local LinkBeam and ignores `equip`. Neither destination reproduces the source's combat system. Neither destination is required by AIP Core.
 
 ## Engine-neutral core, runtime adapters
 

@@ -153,7 +153,7 @@ FString AAIPWaveDirector::GetHudLine() const
 	const float HP = Tower ? Tower->GetHealth() : 0.f;
 	const float MaxHP = Tower ? Tower->GetMaxHealth() : 0.f;
 
-	FString Gun = TEXT("LinkBeam");
+	FString Gun = TEXT("Pistol");
 	if (APawn* Pawn = UGameplayStatics::GetPlayerPawn(this, 0))
 	{
 		if (const AAIPReferenceCharacter* Character = Cast<AAIPReferenceCharacter>(Pawn))
@@ -166,13 +166,13 @@ FString AAIPWaveDirector::GetHudLine() const
 	switch (State)
 	{
 	case EAIPArenaState::Countdown:
-		Phase = FString::Printf(TEXT("wave 1 in %.0fs — repair core with RMB"), FMath::Max(0.f, StateTimer));
+		Phase = FString::Printf(TEXT("wave 1 in %.0fs — pistol only until AIP"), FMath::Max(0.f, StateTimer));
 		break;
 	case EAIPArenaState::Spawning:
 		Phase = FString::Printf(TEXT("wave %d — left %d  alive %d"), CurrentWave, RemainingToSpawn, AliveInvaders);
 		break;
 	case EAIPArenaState::Resting:
-		Phase = FString::Printf(TEXT("rest %.0fs — E at terminal unlocks CyanSniper"), FMath::Max(0.f, StateTimer));
+		Phase = FString::Printf(TEXT("rest %.0fs — pull web switch then E unlocks LinkBeam"), FMath::Max(0.f, StateTimer));
 		break;
 	case EAIPArenaState::Victory:
 		Phase = TEXT("VICTORY — F exports arena sigil");

@@ -40,7 +40,7 @@ AAIPTerminal::AAIPTerminal()
 	PromptText->SetupAttachment(Root);
 	PromptText->SetRelativeLocation(FVector(0.f, 0.f, 240.f));
 	PromptText->SetHorizontalAlignment(EHTA_Center);
-	PromptText->SetText(FText::FromString(TEXT("AIP Terminal\n[E] Load inbox\n[F] Export sigil")));
+	PromptText->SetText(FText::FromString(TEXT("AIP Terminal\n[E] Load inbox (LinkBeam)\n[F] Export sigil")));
 	PromptText->SetWorldSize(28.f);
 }
 

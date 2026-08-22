@@ -1,6 +1,7 @@
 #!/usr/bin/env node
+import { createServer } from "node:http";
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { dirname, extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mapEnvelope } from "./map.js";
 import { validateEnvelope } from "./validate.js";
@@ -17,6 +18,7 @@ Usage:
   aip map --destination <name> <envelope.json>
   aip exchange write-inbox <envelope.json>
   aip exchange list
+  aip switch serve [--port 8787]
 
 Destinations:
   unreal          examples/unreal-local-mapping.json
@@ -24,6 +26,15 @@ Destinations:
   decentraland    examples/decentraland-local-mapping.json
 `);
   process.exit(1);
+}
+
+function writeInbox(envelope: { id: string }): string {
+  const id = String(envelope.id).replace(/[^a-zA-Z0-9._-]/g, "_");
+  const inbox = resolve(repoRoot, "exchange/inbox");
+  mkdirSync(inbox, { recursive: true });
+  const dest = resolve(inbox, `${id}.aip.json`);
+  writeFileSync(dest, `${JSON.stringify(envelope, null, 2)}\n`, "utf8");
+  return dest;
 }
 
 function loadJson(path: string): unknown {
@@ -101,11 +112,7 @@ function main(argv: string[]): void {
         for (const err of validated.errors) console.error(`- ${err}`);
         process.exit(2);
       }
-      const id = String(validated.envelope.id).replace(/[^a-zA-Z0-9._-]/g, "_");
-      const inbox = resolve(repoRoot, "exchange/inbox");
-      mkdirSync(inbox, { recursive: true });
-      const dest = resolve(inbox, `${id}.aip.json`);
-      writeFileSync(dest, `${JSON.stringify(validated.envelope, null, 2)}\n`, "utf8");
+      const dest = writeInbox(validated.envelope);
       console.log(`wrote ${dest}`);
       return;
     }
@@ -118,6 +125,105 @@ function main(argv: string[]): void {
         console.log(`${dir}/ (${files.length})`);
         for (const f of files) console.log(`  ${f}`);
       }
+      return;
+    }
+  }
+
+  if (cmd === "switch") {
+    const sub = rest[0];
+    if (sub === "serve") {
+      let port = 8787;
+      for (let i = 1; i < rest.length; i++) {
+        if (rest[i] === "--port") {
+          const parsed = Number(rest[++i]);
+          if (!Number.isFinite(parsed) || parsed <= 0) {
+            console.error("Invalid --port");
+            process.exit(1);
+          }
+          port = parsed;
+        }
+      }
+
+      const pageDir = resolve(repoRoot, "adapters/web/switch");
+      const breakerPath = resolve(repoRoot, "examples/main-breaker.aip.json");
+      const mime: Record<string, string> = {
+        ".html": "text/html; charset=utf-8",
+        ".json": "application/json; charset=utf-8",
+        ".js": "text/javascript; charset=utf-8",
+        ".css": "text/css; charset=utf-8",
+      };
+
+      const cors = (res: import("node:http").ServerResponse) => {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+      };
+
+      const server = createServer((req, res) => {
+        const url = new URL(req.url ?? "/", `http://127.0.0.1:${port}`);
+        cors(res);
+
+        if (req.method === "OPTIONS") {
+          res.writeHead(204);
+          res.end();
+          return;
+        }
+
+        if (req.method === "POST" && url.pathname === "/pull") {
+          const validated = validateEnvelope(loadJson(breakerPath), { schemaPath: schemaPath() });
+          if (!validated.ok) {
+            res.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+            res.end(JSON.stringify({ ok: false, errors: validated.errors }));
+            return;
+          }
+          const path = writeInbox(validated.envelope);
+          console.log(`switch pull wrote ${path}`);
+          res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+          res.end(JSON.stringify({ ok: true, path }));
+          return;
+        }
+
+        if (req.method === "GET" && url.pathname === "/envelope.json") {
+          res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+          res.end(readFileSync(breakerPath));
+          return;
+        }
+
+        if (req.method === "GET" && (url.pathname === "/" || url.pathname === "/index.html")) {
+          const html = readFileSync(resolve(pageDir, "index.html"));
+          res.writeHead(200, { "Content-Type": mime[".html"] });
+          res.end(html);
+          return;
+        }
+
+        if (req.method === "GET") {
+          const safe = url.pathname.replace(/\.\./g, "");
+          const file = resolve(pageDir, safe.slice(1) || "index.html");
+          if (!file.startsWith(pageDir)) {
+            res.writeHead(403);
+            res.end();
+            return;
+          }
+          try {
+            const body = readFileSync(file);
+            res.writeHead(200, { "Content-Type": mime[extname(file)] ?? "application/octet-stream" });
+            res.end(body);
+            return;
+          } catch {
+            res.writeHead(404);
+            res.end("not found");
+            return;
+          }
+        }
+
+        res.writeHead(405);
+        res.end();
+      });
+
+      server.listen(port, "127.0.0.1", () => {
+        console.log(`AIP switch source  http://127.0.0.1:${port}`);
+        console.log("Pull the breaker, then Unreal E at the terminal.");
+      });
       return;
     }
   }

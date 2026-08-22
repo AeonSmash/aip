@@ -7,13 +7,19 @@ AAIPLinkBeamWeapon::AAIPLinkBeamWeapon()
 {
 	ViewScale = FVector(0.42f, 0.1f, 0.1f);
 	ViewOffset = FVector(40.f, 18.f, -14.f);
+	bUnlocked = false;
+}
+
+void AAIPLinkBeamWeapon::SetUnlocked(bool bInUnlocked)
+{
+	bUnlocked = bInUnlocked;
 }
 
 void AAIPLinkBeamWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!bEquipped)
+	if (!bEquipped || !bUnlocked)
 	{
 		return;
 	}

@@ -6,7 +6,15 @@ Target length: **60–120 seconds**. No narration required if on-screen text is 
 
 ```bash
 cd sdk/typescript
-npm run aip -- exchange write-inbox ../../examples/emberblade.aip.json
+npm run build
+npm run aip -- switch serve
+```
+
+Browser: https://aeonsmash.com/#aip-switch — pull the CRT breaker, then write inbox:
+
+```bash
+cd sdk/typescript
+npm run aip -- exchange write-inbox ../../examples/main-breaker.aip.json
 ```
 
 Open `adapters/unreal/AIPReference/AIPReference.uproject` → Play.
@@ -15,12 +23,13 @@ Open `adapters/unreal/AIPReference/AIPReference.uproject` → Play.
 
 | Time | Picture | What to show |
 | --- | --- | --- |
-| 0:00 | HUD | Core HP, countdown, gun=LinkBeam |
-| 0:05 | LinkBeam | Green beam on an invader; RMB repair on the core |
-| 0:25 | Terminal | Walk to cube, press E |
-| 0:35 | HUD | Emberblade → weapon.sniper / unlock-sniper, ignore equip |
-| 0:45 | CyanSniper | Press 2, cyan hitscan |
-| 1:00 | F | Outbox write; optional CLI map to Decentraland museum |
+| 0:00 | HUD | Core HP, countdown, gun=Pistol |
+| 0:05 | Pistol | Weak hitscan on an invader; no RMB repair |
+| 0:15 | Web switch | ASCII lever clunks CLOSED; envelope types out |
+| 0:30 | Terminal | Walk to cube, press E |
+| 0:38 | HUD | Main Breaker → weapon.linkbeam / unlock-linkbeam, ignore equip |
+| 0:45 | LinkBeam | Green beam; RMB repair on the core |
+| 1:05 | F | Outbox write; optional CLI map to Decentraland museum |
 | 1:15 | End card | github.com/AeonSmash/aip |
 
 Upload unlisted YouTube when ready; keep the existing explainer (`3D2cgt-ajlE`) as the grant media link until this cut replaces it.

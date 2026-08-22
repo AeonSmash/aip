@@ -15,7 +15,7 @@ class UCameraComponent;
 class UInputAction;
 class UAIPPlayerUpgradeComponent;
 class AAIPLinkBeamWeapon;
-class AAIPCyanSniperWeapon;
+class AAIPStarterPistol;
 class AAIPWeapon;
 struct FInputActionValue;
 
@@ -105,10 +105,10 @@ protected:
 	void OnAltReleased();
 
 	UFUNCTION()
-	void OnSelectLinkBeam();
+	void OnSelectPistol();
 
 	UFUNCTION()
-	void OnSelectSniper();
+	void OnSelectLinkBeam();
 
 	UFUNCTION()
 	void OnNextWeapon();
@@ -127,13 +127,13 @@ protected:
 	class AAIPTerminal* FindOverlappingTerminal() const;
 
 	UPROPERTY()
-	TObjectPtr<AAIPLinkBeamWeapon> LinkBeam;
+	TObjectPtr<AAIPStarterPistol> StarterPistol;
 
 	UPROPERTY()
-	TObjectPtr<AAIPCyanSniperWeapon> CyanSniper;
+	TObjectPtr<AAIPLinkBeamWeapon> LinkBeam;
 
 	int32 EquippedWeaponIndex = 0;
-	bool bSniperUnlocked = false;
+	bool bLinkBeamUnlocked = false;
 
 public:
 	UFUNCTION(BlueprintPure, Category = "AIP|Weapon")

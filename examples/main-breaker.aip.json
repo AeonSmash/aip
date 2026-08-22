@@ -1,0 +1,31 @@
+{
+  "aip": "0.1",
+  "kind": "event",
+  "id": "aip:web:main-breaker:01",
+  "type": "signal.breaker",
+  "label": "Main Breaker",
+  "source": {
+    "world": "web",
+    "app": "aip-switch",
+    "scene": "crt-breaker",
+    "issuedAt": "2026-08-22T07:00:00Z"
+  },
+  "provenance": {
+    "origin": "AIP web switch",
+    "discoveredBy": "operator:local",
+    "history": ["breaker opened", "operator pulled the lever"]
+  },
+  "context": {
+    "power": {
+      "scale": "relative",
+      "tier": "high",
+      "basis": "web-switch local signal strength"
+    }
+  },
+  "capabilities": ["equip", "display", "quest-flag"],
+  "rights": {
+    "owner": "operator:local",
+    "transferable": false,
+    "displayable": true
+  }
+}

@@ -20,12 +20,12 @@ exchange/
 ## Inbox (Unreal inbound)
 
 1. Author or obtain a valid 0.1 envelope.
-2. Validate and copy with the CLI:
+2. Validate and copy with the CLI, **or** pull the web breaker (`aip switch serve` → POST `/pull`):
 
 ```bash
 cd sdk/typescript
-npm run aip -- validate ../../examples/emberblade.aip.json
-npm run aip -- exchange write-inbox ../../examples/emberblade.aip.json
+npm run aip -- validate ../../examples/main-breaker.aip.json
+npm run aip -- exchange write-inbox ../../examples/main-breaker.aip.json
 ```
 
 3. In Unreal, press the **Interact** key at the mid-field terminal (or call `LoadAipEnvelopeFromInbox`). Do **not** rely on automatic folder watching — `IDirectoryWatcher` is editor-only and breaks packaged builds.

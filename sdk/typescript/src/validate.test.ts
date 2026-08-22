@@ -24,6 +24,16 @@ describe("validateEnvelope", () => {
     }
   });
 
+  it("accepts main-breaker.aip.json", () => {
+    const result = validateEnvelope(load("examples/main-breaker.aip.json"), { schemaPath });
+    assert.equal(result.ok, true);
+    if (result.ok) {
+      assert.equal(result.envelope.kind, "event");
+      assert.equal(result.envelope.type, "signal.breaker");
+      assert.equal(result.envelope.source.world, "web");
+    }
+  });
+
   it("rejects a mutated envelope with a readable reason", () => {
     const bad = load("examples/emberblade.aip.json") as Record<string, unknown>;
     bad.aip = "9.9";
@@ -49,14 +59,24 @@ describe("mapEnvelope", () => {
     assert.ok(mapped.ignoredCapabilities.includes("equip"));
   });
 
-  it("maps Emberblade for unreal-fps sniper unlock", () => {
+  it("maps Main Breaker for unreal-fps LinkBeam unlock", () => {
+    const env = validateEnvelope(load("examples/main-breaker.aip.json"), { schemaPath });
+    assert.equal(env.ok, true);
+    if (!env.ok) return;
+    const mapped = mapEnvelope(env.envelope, load("mappings/unreal-fps.json"));
+    assert.equal(mapped.localType, "weapon.linkbeam");
+    assert.equal(mapped.upgrade, "unlock-linkbeam");
+    assert.equal(mapped.damageMultiplier, 1.0);
+    assert.ok(mapped.ignoredCapabilities.includes("equip"));
+  });
+
+  it("maps Emberblade for unreal-fps as notice only", () => {
     const env = validateEnvelope(load("examples/emberblade.aip.json"), { schemaPath });
     assert.equal(env.ok, true);
     if (!env.ok) return;
     const mapped = mapEnvelope(env.envelope, load("mappings/unreal-fps.json"));
-    assert.equal(mapped.localType, "weapon.sniper");
-    assert.equal(mapped.upgrade, "unlock-sniper");
-    assert.equal(mapped.damageMultiplier, 1.0);
+    assert.equal(mapped.localType, "weapon.notice");
+    assert.equal(mapped.upgrade, "none");
     assert.ok(mapped.ignoredCapabilities.includes("equip"));
   });
 

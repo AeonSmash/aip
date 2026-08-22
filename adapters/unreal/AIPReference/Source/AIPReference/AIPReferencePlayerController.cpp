@@ -39,8 +39,8 @@ void AAIPReferencePlayerController::BeginPlay()
 		if (SovereigntyWidget)
 		{
 			SovereigntyWidget->AddToViewport(10);
-			SovereigntyWidget->SetSummary(TEXT("AIP: E at terminal loads inbox (CyanSniper unlock)"));
-			SovereigntyWidget->SetArenaStatus(TEXT("core -- | countdown | gun=LinkBeam"));
+			SovereigntyWidget->SetSummary(TEXT("AIP: pull web switch, then E at terminal unlocks LinkBeam"));
+			SovereigntyWidget->SetArenaStatus(TEXT("core -- | countdown | gun=Pistol"));
 		}
 	}
 }

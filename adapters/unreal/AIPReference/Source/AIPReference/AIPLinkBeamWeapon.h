@@ -16,6 +16,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual FString GetWeaponDisplayName() const override { return TEXT("LinkBeam"); }
 
+	UFUNCTION(BlueprintCallable, Category = "AIP|Weapon")
+	void SetUnlocked(bool bInUnlocked);
+
+	UFUNCTION(BlueprintPure, Category = "AIP|Weapon")
+	bool IsUnlocked() const { return bUnlocked; }
+
 protected:
 	void Pulse(bool bRepair);
 
@@ -32,4 +38,5 @@ protected:
 	float PulseInterval = 0.1f;
 
 	float PulseTimer = 0.f;
+	bool bUnlocked = false;
 };

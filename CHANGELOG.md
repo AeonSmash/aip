@@ -9,6 +9,58 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.1] - 2026-08-22
+
+Public CRT breaker on aeonsmash.com. Envelope schema remains **0.1**.
+
+### Added
+
+- Live source page: https://aeonsmash.com/#aip-switch (Epoch-Website **1.9.2**,
+  unlisted like `#aip`). Static envelope at `/aip/main-breaker.aip.json`
+- `aip switch serve` CORS so the public page can optionally POST
+  `http://127.0.0.1:8787/pull` and write `exchange/inbox/`
+
+### Changed
+
+- Demo loop no longer starts on localhost: pull the public lever, then
+  `write-inbox` from `aip/sdk/typescript` (or drop the downloaded JSON into
+  `exchange/inbox/`)
+- `@aeonsmash/aip` and `AIP.uplugin` VersionName **0.5.0 → 0.5.1**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Unreal still loads files on **E**. No game sockets.
+
+## [0.5.0] - 2026-08-22
+
+Web CRT breaker as a second source world; Unreal starts with a pistol and **E**
+unlocks LinkBeam. Envelope schema remains **0.1**.
+
+### Added
+
+- `adapters/web/switch/` — phosphor CRT page with a four-frame ASCII lever
+  (click / Space / Enter). Pulling it emits `examples/main-breaker.aip.json`
+- `aip switch serve [--port 8787]` — serves the page; `POST /pull` validates
+  and writes `exchange/inbox/`. Static hosts fall back to JSON download
+- `AAIPStarterPistol` — weak camera hitscan, no core repair
+- Mapping rule: `signal.breaker` + high/exceptional → `weapon.linkbeam` /
+  `unlock-linkbeam` (`equip` ignored)
+
+### Changed
+
+- Arena loadout: pistol at spawn; LinkBeam locked until the breaker mapping
+- Emberblade on `unreal-fps` is notice-only so the live demo is one unlock
+- `@aeonsmash/aip` and `AIP.uplugin` **0.4.0 → 0.5.0** (plugin Version 4 → 5)
+- Docs and recording shot list: web lever → E → LinkBeam repair → F
+
+### Notes
+
+- Protocol envelope version is still **0.1**. Do not treat presentation `0.5.x`
+  as a schema bump.
+- Unreal still loads files on **E**. No game sockets. CyanSniper C++ remains in
+  tree but is not spawned in this loop.
+
 ## [0.4.0] - 2026-08-22
 
 Playable Unreal one-tower reference in PIE. Envelope schema remains **0.1**.
