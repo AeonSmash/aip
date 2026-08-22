@@ -1,6 +1,6 @@
 # Unreal toolchain (M0)
 
-Verified on this machine (2026-08-20 / 2026-08-21):
+Verified on this machine (2026-08-20 / 2026-08-21 / 2026-08-22):
 
 | Component | Status |
 | --- | --- |
@@ -15,7 +15,9 @@ Verified on this machine (2026-08-20 / 2026-08-21):
 2. Modules compile.
 3. Press Play in the editor.
 
-**CLI compile result:** `AIPReferenceEditor Win64 Development` — **Succeeded**.
+**CLI compile result:** `AIPReferenceEditor Win64 Development` — **Succeeded** (2026-08-22, one-tower arena).
+
+**PIE:** `Lvl_FirstPerson` Play after CoreRedirects — First Person BPs load (2026-08-22).
 
 ## Project
 

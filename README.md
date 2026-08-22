@@ -40,7 +40,7 @@ This repository is the public presentation of AIP. It is intentionally small. In
 | [`examples/arena-sigil.aip.json`](examples/arena-sigil.aip.json) | Example event from the Unreal reference |
 | [`examples/unreal-local-mapping.json`](examples/unreal-local-mapping.json) | Example: how an Unreal destination *might* interpret that object |
 | [`examples/decentraland-local-mapping.json`](examples/decentraland-local-mapping.json) | Example: how a Decentraland destination *might* interpret a foreign object |
-| [`mappings/unreal-fps.json`](mappings/unreal-fps.json) | Destination-owned FPS upgrade rules (runtime data) |
+| [`mappings/unreal-fps.json`](mappings/unreal-fps.json) | Destination-owned FPS rules (CyanSniper unlock) |
 | [`sdk/typescript/`](sdk/typescript/) | Validator, mapping resolver, CLI, tests |
 | [`exchange/`](exchange/) | File-drop inbox/outbox transport |
 | [`adapters/unreal/`](adapters/unreal/) | UE 5.8 First Person reference + AIP plugin |
@@ -59,7 +59,7 @@ npm run aip -- map --destination unreal-fps ../../examples/emberblade.aip.json
 npm run aip -- map --destination decentraland ../../examples/arena-sigil.aip.json
 ```
 
-Then open [`adapters/unreal/AIPReference/AIPReference.uproject`](adapters/unreal/AIPReference/AIPReference.uproject), Play, press **E** at the terminal, **F** to export.
+Then open [`adapters/unreal/AIPReference/AIPReference.uproject`](adapters/unreal/AIPReference/AIPReference.uproject), Play. LinkBeam is the starter gun. Press **E** at the terminal to unlock CyanSniper from Emberblade, **F** to export.
 ## Architecture
 
 ```mermaid
@@ -90,12 +90,12 @@ No particular engine or world is a requirement of AIP Core. Unreal, Decentraland
 
 ## Current status
 
-**Prototype / in development — Unreal reference MVP in tree.**
+**Prototype / in development — playable one-tower Unreal reference (presentation 0.4.0).**
 
-- TypeScript core validates and maps envelopes (`npm test` green)
+- TypeScript core validates and maps envelopes (`npm test` green); `@aeonsmash/aip` **0.4.0**
 - File exchange contract under `exchange/`
-- Unreal 5.8 First Person reference compiles with the AIP Runtime plugin
-- Bidirectional demo path: inbox weapon → Unreal upgrade; Unreal sigil → Decentraland museum mapping via CLI
+- Unreal 5.8 First Person reference (PIE): LinkBeam + AIP-unlocked CyanSniper, core tower, NPC waves
+- Bidirectional demo path: inbox weapon → Unreal sniper unlock; Unreal sigil → Decentraland museum mapping via CLI
 
 Existing AeonSmash work is how the problem was found, not a dependency of the protocol.
 
@@ -110,7 +110,7 @@ AIP does **not** require:
 ## Roadmap
 
 1. Freeze a tiny public envelope and examples *(this repo)*
-2. A real-time 3D adapter / SDK and a small reference level *(Unreal MVP — in progress)*
+2. A real-time 3D adapter / SDK and a small reference level *(Unreal MVP — playable in PIE)*
 3. Bidirectional demonstration between two independent runtimes *(file transport + CLI peer)*
 4. Validation, diagnostics, and conformance fixtures *(TypeScript tests — started)*
 5. Documentation and sample integrations other developers can run

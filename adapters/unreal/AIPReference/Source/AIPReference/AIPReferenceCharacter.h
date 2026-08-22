@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "AIPTypes.h"
 #include "AIPReference.h"
 #include "AIPReferenceCharacter.generated.h"
 
@@ -13,6 +14,9 @@ class USkeletalMeshComponent;
 class UCameraComponent;
 class UInputAction;
 class UAIPPlayerUpgradeComponent;
+class AAIPLinkBeamWeapon;
+class AAIPCyanSniperWeapon;
+class AAIPWeapon;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -88,12 +92,59 @@ protected:
 	UFUNCTION()
 	void OnAipExport();
 
+	UFUNCTION()
+	void OnFirePressed();
+
+	UFUNCTION()
+	void OnFireReleased();
+
+	UFUNCTION()
+	void OnAltPressed();
+
+	UFUNCTION()
+	void OnAltReleased();
+
+	UFUNCTION()
+	void OnSelectLinkBeam();
+
+	UFUNCTION()
+	void OnSelectSniper();
+
+	UFUNCTION()
+	void OnNextWeapon();
+
+	UFUNCTION()
+	void OnPrevWeapon();
+
+	UFUNCTION()
+	void OnAipMappingApplied(const FAIPEnvelope& Envelope, const FAIPMappedInterpretation& Mapping);
+
+	void SpawnArenaWeapons();
+	void SuppressTemplatePistol();
+	void EquipWeaponIndex(int32 Index);
+	AAIPWeapon* GetEquippedWeapon() const;
+
 	class AAIPTerminal* FindOverlappingTerminal() const;
+
+	UPROPERTY()
+	TObjectPtr<AAIPLinkBeamWeapon> LinkBeam;
+
+	UPROPERTY()
+	TObjectPtr<AAIPCyanSniperWeapon> CyanSniper;
+
+	int32 EquippedWeaponIndex = 0;
+	bool bSniperUnlocked = false;
+
+public:
+	UFUNCTION(BlueprintPure, Category = "AIP|Weapon")
+	FString GetEquippedWeaponName() const;
 
 protected:
 
 	/** Set up input action bindings */
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+
+	virtual void BeginPlay() override;
 	
 
 public:

@@ -15,12 +15,12 @@ Open `adapters/unreal/AIPReference/AIPReference.uproject` → Play.
 
 | Time | Picture | What to show |
 | --- | --- | --- |
-| 0:00 | Title card or HUD | "AIP Unreal reference" |
-| 0:05 | Walk to terminal | Greybox arena, UT-feel movement |
-| 0:20 | Press E | Log/HUD: Emberblade → weapon.upgrade, ignore equip |
-| 0:40 | Fire / move | Gun feels upgraded (damage multiplier applied in component) |
-| 0:55 | Press F | Outbox write path on terminal text |
-| 1:10 | Split or cut to terminal | `npm run aip -- map --destination decentraland exchange/outbox/...` → museum collectible |
-| 1:25 | End card | github.com/AeonSmash/aip |
+| 0:00 | HUD | Core HP, countdown, gun=LinkBeam |
+| 0:05 | LinkBeam | Green beam on an invader; RMB repair on the core |
+| 0:25 | Terminal | Walk to cube, press E |
+| 0:35 | HUD | Emberblade → weapon.sniper / unlock-sniper, ignore equip |
+| 0:45 | CyanSniper | Press 2, cyan hitscan |
+| 1:00 | F | Outbox write; optional CLI map to Decentraland museum |
+| 1:15 | End card | github.com/AeonSmash/aip |
 
 Upload unlisted YouTube when ready; keep the existing explainer (`3D2cgt-ajlE`) as the grant media link until this cut replaces it.

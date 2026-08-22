@@ -39,7 +39,8 @@ void AAIPReferencePlayerController::BeginPlay()
 		if (SovereigntyWidget)
 		{
 			SovereigntyWidget->AddToViewport(10);
-			SovereigntyWidget->SetSummary(TEXT("AIP: stand at terminal, press E to load inbox envelope"));
+			SovereigntyWidget->SetSummary(TEXT("AIP: E at terminal loads inbox (CyanSniper unlock)"));
+			SovereigntyWidget->SetArenaStatus(TEXT("core -- | countdown | gun=LinkBeam"));
 		}
 	}
 }
@@ -65,6 +66,14 @@ void AAIPReferencePlayerController::SetupInputComponent()
 				}
 			}
 		}
+	}
+}
+
+void AAIPReferencePlayerController::SetArenaHud(const FString& Line)
+{
+	if (SovereigntyWidget)
+	{
+		SovereigntyWidget->SetArenaStatus(Line);
 	}
 }
 

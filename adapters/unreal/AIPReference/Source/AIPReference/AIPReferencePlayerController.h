@@ -25,6 +25,9 @@ public:
 	/** Constructor */
 	AAIPReferencePlayerController();
 
+	UFUNCTION(BlueprintCallable, Category = "AIP")
+	void SetArenaHud(const FString& Line);
+
 protected:
 
 	/** Input Mapping Contexts */

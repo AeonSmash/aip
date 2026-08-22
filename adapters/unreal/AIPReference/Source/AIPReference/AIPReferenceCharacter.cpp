@@ -5,14 +5,19 @@
 #include "AIPPlayerUpgradeComponent.h"
 #include "AIPSovereigntyWidget.h"
 #include "AIPTerminal.h"
+#include "AIPLinkBeamWeapon.h"
+#include "AIPCyanSniperWeapon.h"
+#include "AIPWeapon.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputComponent.h"
+#include "InputCoreTypes.h"
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "Engine/World.h"
 #include "EngineUtils.h"
 #include "UObject/UObjectIterator.h"
 #include "AIPReference.h"
@@ -54,6 +59,17 @@ AAIPReferenceCharacter::AAIPReferenceCharacter()
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 }
 
+void AAIPReferenceCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	SuppressTemplatePistol();
+	SpawnArenaWeapons();
+	if (AIPUpgrade)
+	{
+		AIPUpgrade->OnMappingApplied.AddDynamic(this, &AAIPReferenceCharacter::OnAipMappingApplied);
+	}
+}
+
 void AAIPReferenceCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {	
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
@@ -72,6 +88,14 @@ void AAIPReferenceCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	// AIP terminal keys (input action assets not required)
 	PlayerInputComponent->BindKey(EKeys::E, IE_Pressed, this, &AAIPReferenceCharacter::OnAipInteract);
 	PlayerInputComponent->BindKey(EKeys::F, IE_Pressed, this, &AAIPReferenceCharacter::OnAipExport);
+	PlayerInputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &AAIPReferenceCharacter::OnFirePressed);
+	PlayerInputComponent->BindKey(EKeys::LeftMouseButton, IE_Released, this, &AAIPReferenceCharacter::OnFireReleased);
+	PlayerInputComponent->BindKey(EKeys::RightMouseButton, IE_Pressed, this, &AAIPReferenceCharacter::OnAltPressed);
+	PlayerInputComponent->BindKey(EKeys::RightMouseButton, IE_Released, this, &AAIPReferenceCharacter::OnAltReleased);
+	PlayerInputComponent->BindKey(EKeys::One, IE_Pressed, this, &AAIPReferenceCharacter::OnSelectLinkBeam);
+	PlayerInputComponent->BindKey(EKeys::Two, IE_Pressed, this, &AAIPReferenceCharacter::OnSelectSniper);
+	PlayerInputComponent->BindKey(EKeys::MouseScrollUp, IE_Pressed, this, &AAIPReferenceCharacter::OnNextWeapon);
+	PlayerInputComponent->BindKey(EKeys::MouseScrollDown, IE_Pressed, this, &AAIPReferenceCharacter::OnPrevWeapon);
 }
 
 AAIPTerminal* AAIPReferenceCharacter::FindOverlappingTerminal() const
@@ -124,6 +148,171 @@ void AAIPReferenceCharacter::OnAipInteract()
 	if (bOk && AIPUpgrade)
 	{
 		UE_LOG(LogTemp, Log, TEXT("AIP HUD: %s"), *AIPUpgrade->GetHudSummary());
+	}
+}
+
+void AAIPReferenceCharacter::SpawnArenaWeapons()
+{
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		return;
+	}
+
+	FActorSpawnParameters Params;
+	Params.Owner = this;
+	Params.Instigator = this;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	LinkBeam = World->SpawnActor<AAIPLinkBeamWeapon>(AAIPLinkBeamWeapon::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, Params);
+	CyanSniper = World->SpawnActor<AAIPCyanSniperWeapon>(AAIPCyanSniperWeapon::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, Params);
+
+	if (LinkBeam)
+	{
+		LinkBeam->AttachToOwnerCamera();
+	}
+	if (CyanSniper)
+	{
+		CyanSniper->AttachToOwnerCamera();
+		CyanSniper->SetUnlocked(false);
+	}
+	EquipWeaponIndex(0);
+}
+
+void AAIPReferenceCharacter::SuppressTemplatePistol()
+{
+	TArray<USkeletalMeshComponent*> Meshes;
+	GetComponents<USkeletalMeshComponent>(Meshes);
+	for (USkeletalMeshComponent* MeshComp : Meshes)
+	{
+		if (MeshComp && MeshComp != FirstPersonMesh && MeshComp != GetMesh())
+		{
+			MeshComp->SetHiddenInGame(true);
+			MeshComp->SetComponentTickEnabled(false);
+			MeshComp->SetCastShadow(false);
+			MeshComp->SetVisibility(false, true);
+		}
+	}
+
+	TArray<AActor*> Attached;
+	GetAttachedActors(Attached, true, true);
+	for (AActor* Child : Attached)
+	{
+		if (!Child || Child->IsA<AAIPWeapon>())
+		{
+			continue;
+		}
+		const FString Name = Child->GetClass()->GetName();
+		if (Name.Contains(TEXT("Weapon")) || Name.Contains(TEXT("Rifle")) || Name.Contains(TEXT("Pistol")) || Name.Contains(TEXT("Gun")))
+		{
+			Child->SetActorHiddenInGame(true);
+			Child->SetActorEnableCollision(false);
+			Child->SetActorTickEnabled(false);
+		}
+	}
+}
+
+void AAIPReferenceCharacter::EquipWeaponIndex(int32 Index)
+{
+	if (Index == 1 && !bSniperUnlocked)
+	{
+		Index = 0;
+	}
+
+	EquippedWeaponIndex = Index;
+	if (LinkBeam)
+	{
+		LinkBeam->SetEquipped(Index == 0);
+	}
+	if (CyanSniper)
+	{
+		CyanSniper->SetEquipped(Index == 1 && bSniperUnlocked);
+	}
+}
+
+AAIPWeapon* AAIPReferenceCharacter::GetEquippedWeapon() const
+{
+	if (EquippedWeaponIndex == 1)
+	{
+		return CyanSniper;
+	}
+	return LinkBeam;
+}
+
+FString AAIPReferenceCharacter::GetEquippedWeaponName() const
+{
+	if (const AAIPWeapon* Weapon = GetEquippedWeapon())
+	{
+		return Weapon->GetWeaponDisplayName();
+	}
+	return TEXT("LinkBeam");
+}
+
+void AAIPReferenceCharacter::OnFirePressed()
+{
+	if (AAIPWeapon* Weapon = GetEquippedWeapon())
+	{
+		Weapon->StartFire();
+	}
+}
+
+void AAIPReferenceCharacter::OnFireReleased()
+{
+	if (AAIPWeapon* Weapon = GetEquippedWeapon())
+	{
+		Weapon->StopFire();
+	}
+}
+
+void AAIPReferenceCharacter::OnAltPressed()
+{
+	if (AAIPWeapon* Weapon = GetEquippedWeapon())
+	{
+		Weapon->StartAltFire();
+	}
+}
+
+void AAIPReferenceCharacter::OnAltReleased()
+{
+	if (AAIPWeapon* Weapon = GetEquippedWeapon())
+	{
+		Weapon->StopAltFire();
+	}
+}
+
+void AAIPReferenceCharacter::OnSelectLinkBeam()
+{
+	EquipWeaponIndex(0);
+}
+
+void AAIPReferenceCharacter::OnSelectSniper()
+{
+	if (bSniperUnlocked)
+	{
+		EquipWeaponIndex(1);
+	}
+}
+
+void AAIPReferenceCharacter::OnNextWeapon()
+{
+	EquipWeaponIndex(bSniperUnlocked && EquippedWeaponIndex == 0 ? 1 : 0);
+}
+
+void AAIPReferenceCharacter::OnPrevWeapon()
+{
+	OnNextWeapon();
+}
+
+void AAIPReferenceCharacter::OnAipMappingApplied(const FAIPEnvelope& Envelope, const FAIPMappedInterpretation& Mapping)
+{
+	if (AIPUpgrade && AIPUpgrade->HasSniperUnlock())
+	{
+		bSniperUnlocked = true;
+		if (CyanSniper)
+		{
+			CyanSniper->SetUnlocked(true);
+		}
+		UE_LOG(LogAIPReference, Log, TEXT("AIP unlocked CyanSniper from %s"), *Envelope.Label);
 	}
 }
 

@@ -10,7 +10,7 @@
  * Concrete arena GameMode: UT-feel defaults + mid-field AIP terminal.
  */
 UCLASS()
-class AAIPReferenceGameMode : public AGameModeBase
+class AIPREFERENCE_API AAIPReferenceGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
@@ -22,4 +22,10 @@ public:
 	/** World location for the AIP terminal (mid-field). */
 	UPROPERTY(EditAnywhere, Category = "AIP")
 	FVector TerminalSpawnLocation = FVector(0.f, 800.f, 100.f);
+
+	UPROPERTY(EditAnywhere, Category = "AIP|Arena")
+	FVector TowerSpawnLocation = FVector(0.f, 400.f, 80.f);
+
+protected:
+	void EnsureArenaActors();
 };

@@ -18,12 +18,12 @@
       },
       "interpretation": {
         "principle": "destination-sovereignty",
-        "note": "Unreal FPS does not import foreign melee. A high-tier weapon becomes one local gun upgrade tier.",
-        "localType": "weapon.upgrade",
-        "localActor": "AIP_GunUpgrade",
+        "note": "Unreal FPS does not import foreign melee. A high-tier weapon unlocks the local CyanSniper. LinkBeam stays the starter gun.",
+        "localType": "weapon.sniper",
+        "localActor": "AIP_CyanSniper",
         "slot": "player.primary",
-        "upgrade": "tier1",
-        "damageMultiplier": 1.75,
+        "upgrade": "unlock-sniper",
+        "damageMultiplier": 1.0,
         "acceptedCapabilities": ["display"],
         "ignoredCapabilities": ["equip", "quest-flag"]
       }
@@ -35,7 +35,7 @@
       },
       "interpretation": {
         "principle": "destination-sovereignty",
-        "note": "Lower-tier foreign weapons are acknowledged but do not upgrade the gun.",
+        "note": "Lower-tier foreign weapons are acknowledged but do not unlock the sniper.",
         "localType": "weapon.notice",
         "slot": "player.hud",
         "upgrade": "none",

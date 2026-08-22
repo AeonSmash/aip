@@ -9,6 +9,76 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.4.0] - 2026-08-22
+
+Playable Unreal one-tower reference in PIE. Envelope schema remains **0.1**.
+
+Presentation, `@aeonsmash/aip`, and the Unreal `AIP` plugin are aligned at
+**0.4.0** (SDK and plugin had stayed on 0.2.0 through 0.3.0).
+
+### Changed
+
+- `@aeonsmash/aip` **0.2.0 → 0.4.0**; `AIP.uplugin` VersionName **0.2.0 → 0.4.0**
+  (integer Version 2 → 4)
+- Root README status: one-tower Unreal loop is playable in the editor, not only
+  compiled
+- Toolchain pass criteria: Play after a full editor restart (CoreRedirects load
+  at startup)
+
+### Fixed
+
+- First Person Blueprints still parented to `/Script/TP_FirstPerson` after the
+  C++ rename to `AIPReference`. Without redirects, `BP_FirstPersonCharacter`,
+  `BP_FirstPersonPlayerController`, and `BP_FirstPersonGameMode` failed to load
+  (`CreateExport: Failed to load Outer`). `DefaultEngine.ini` `[CoreRedirects]`
+  maps those classes to `AIPReferenceCharacter` / PlayerController / GameMode /
+  CameraManager. Verified in PIE on 2026-08-22.
+
+### Notes
+
+- Protocol envelope version is still **0.1**. Do not treat presentation `0.4.x`
+  as a schema bump.
+- After a clean load, **File → Save All** rewrites the Blueprint parents so
+  they no longer depend on the redirects.
+
+## [0.3.0] - 2026-08-22
+
+One-tower AIP arena on the Unreal reference. Envelope schema remains **0.1**.
+
+### Added
+
+- `AAIPWeapon` base: camera-origin traces, cube viewmodel attach, debug beam
+- **LinkBeam** — LMB pulses damage invaders; RMB repairs the home core
+- **CyanSniper** — hitscan; locked until an AIP mapping with `unlock-sniper`
+- `AAIPCoreTower` (HP label, invader damage, LinkBeam repair)
+- `AAIPInvader` (walk-to-core, melee), `AAIPInvaderStart` spawn markers
+- `AAIPWaveDirector` — 3 waves, rest after wave 1 so the terminal beat is
+  playable; HUD line (core HP, countdown/wave, equipped gun)
+- `AAIPTowerDefendGameMode` — default pawn/controller from First Person BPs;
+  `AAIPReferenceGameMode` spawns tower / starts / director / terminal if the
+  map has none (level-placed markers win)
+- Art drop folder `adapters/unreal/art/` for later original Blender FBX
+
+### Changed
+
+- `mappings/unreal-fps.json` high/exceptional `artifact.weapon` →
+  `weapon.sniper` / `unlock-sniper` (no longer a 1.75× damage multiplier);
+  `equip` still ignored
+- TypeScript test `maps Emberblade for unreal-fps sniper unlock` matches the
+  new mapping
+- HUD: arena line plus AIP sovereignty summary (origin / local type / ignored
+  capabilities)
+- Character: LMB/RMB/1/2/mouse wheel; template pistol meshes hidden
+- Docs: adapter README controls, toolchain compile verified 2026-08-22
+- `DEMO_RECORDING.md` shot list rewritten for the arena loop (LinkBeam →
+  terminal **E** → CyanSniper → **F** export)
+- `adapters/unreal/art/README.md` — FBX import notes (map vs viewmodels)
+
+### Notes
+
+- Non-goals remain: no networking, no live Hyperfy/DCL emission, no UT2004
+  assets, no Onslaught/vehicles/second core.
+
 ## [0.2.1] - 2026-08-21
 
 ### Changed

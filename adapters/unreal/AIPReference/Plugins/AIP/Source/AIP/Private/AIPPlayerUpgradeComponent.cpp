@@ -9,7 +9,8 @@ void UAIPPlayerUpgradeComponent::ApplyMapping(const FAIPEnvelope& Envelope, cons
 {
 	LastEnvelope = Envelope;
 	LastMapping = Mapping;
-	bHasUpgrade = Mapping.Upgrade == TEXT("tier1");
+	bHasSniperUnlock = Mapping.Upgrade == TEXT("unlock-sniper");
+	bHasUpgrade = bHasSniperUnlock || Mapping.Upgrade == TEXT("tier1");
 	DamageMultiplier = Mapping.DamageMultiplier > 0.f ? Mapping.DamageMultiplier : 1.f;
 	OnMappingApplied.Broadcast(Envelope, Mapping);
 

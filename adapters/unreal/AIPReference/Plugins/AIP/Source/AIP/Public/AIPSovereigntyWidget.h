@@ -16,6 +16,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AIP")
 	void SetSummary(const FString& Summary);
 
+	UFUNCTION(BlueprintCallable, Category = "AIP")
+	void SetArenaStatus(const FString& Status);
+
 protected:
 	virtual void NativeConstruct() override;
 
@@ -25,5 +28,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UTextBlock> RuntimeText;
 
+	UPROPERTY()
+	TObjectPtr<UTextBlock> ArenaText;
+
 	FString CachedSummary = TEXT("AIP: awaiting envelope");
+	FString CachedArena = TEXT("arena: waiting");
 };

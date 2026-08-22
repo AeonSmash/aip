@@ -49,14 +49,14 @@ describe("mapEnvelope", () => {
     assert.ok(mapped.ignoredCapabilities.includes("equip"));
   });
 
-  it("maps Emberblade for unreal-fps upgrade", () => {
+  it("maps Emberblade for unreal-fps sniper unlock", () => {
     const env = validateEnvelope(load("examples/emberblade.aip.json"), { schemaPath });
     assert.equal(env.ok, true);
     if (!env.ok) return;
     const mapped = mapEnvelope(env.envelope, load("mappings/unreal-fps.json"));
-    assert.equal(mapped.localType, "weapon.upgrade");
-    assert.equal(mapped.upgrade, "tier1");
-    assert.equal(mapped.damageMultiplier, 1.75);
+    assert.equal(mapped.localType, "weapon.sniper");
+    assert.equal(mapped.upgrade, "unlock-sniper");
+    assert.equal(mapped.damageMultiplier, 1.0);
     assert.ok(mapped.ignoredCapabilities.includes("equip"));
   });
 
