@@ -61,7 +61,7 @@ npm run aip -- map --destination unreal-fps ../../examples/main-breaker.aip.json
 npm run aip -- map --destination decentraland ../../examples/arena-sigil.aip.json
 ```
 
-Pull the CRT breaker at https://aeonsmash.com/#aip-switch. Then open [`adapters/unreal/AIPReference/AIPReference.uproject`](adapters/unreal/AIPReference/AIPReference.uproject), Play. Start with the pistol. Press **E** at the terminal to unlock LinkBeam from the breaker event, **F** to export.
+Pull the CRT breaker at http://127.0.0.1:8788/switch (envelope board running) or https://aeonsmash.com/#aip-switch (needs a hosted board URL). Then open [`adapters/unreal/AIPReference/AIPReference.uproject`](adapters/unreal/AIPReference/AIPReference.uproject), Play. Start with the pistol. The terminal stays hidden until DCL `signal.box`. **E** posts `signal.terminal`. The CRT pull unlocks LinkBeam. **F** exports a sigil.
 
 ## Architecture
 
@@ -93,13 +93,13 @@ No particular engine or world is a requirement of AIP Core. Unreal, Decentraland
 
 ## Current status
 
-**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.2).**
+**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.3).**
 
-- TypeScript core validates and maps envelopes (`npm test` green); `@aeonsmash/aip` **0.5.2**
+- TypeScript core validates and maps envelopes (`npm test` green); `@aeonsmash/aip` **0.5.3**
 - File exchange contract under `exchange/`
-- Web CRT switch at https://aeonsmash.com/#aip-switch emits `signal.breaker`; Unreal maps it to LinkBeam
-- Unreal 5.8 First Person reference (PIE): start with pistol, AIP-unlocked LinkBeam, core tower, NPC waves
-- Bidirectional demo path: web breaker → Unreal LinkBeam unlock; Unreal sigil → Decentraland museum mapping via CLI
+- Web CRT switch emits `signal.breaker` onto the envelope board; Unreal maps it to LinkBeam
+- Unreal 5.8 First Person reference (PIE): start with pistol, hidden terminal until `signal.box`, AIP-unlocked LinkBeam, core tower, NPC waves
+- Bidirectional demo path: DCL box → Unreal terminal → CRT breaker → Unreal LinkBeam; Unreal sigil → Decentraland museum mapping via CLI
 
 Existing AeonSmash work is how the problem was found, not a dependency of the protocol.
 

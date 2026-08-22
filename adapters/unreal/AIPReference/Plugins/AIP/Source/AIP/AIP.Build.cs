@@ -16,7 +16,8 @@ public class AIP : ModuleRules
 			"Slate",
 			"SlateCore",
 			"Json",
-			"JsonUtilities"
+			"JsonUtilities",
+			"HTTP"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

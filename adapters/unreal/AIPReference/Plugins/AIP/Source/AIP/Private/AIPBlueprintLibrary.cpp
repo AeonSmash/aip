@@ -205,6 +205,52 @@ bool UAIPBlueprintLibrary::LoadAipEnvelopeFromInbox(FAIPEnvelope& OutEnvelope, F
 	return LoadAipEnvelopeFromFile(Path, OutEnvelope, OutError);
 }
 
+bool UAIPBlueprintLibrary::ParseEnvelopeFromJsonString(const FString& Json, FAIPEnvelope& OutEnvelope, FString& OutError)
+{
+	OutError.Reset();
+	TSharedPtr<FJsonObject> Root;
+	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Json);
+	if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+	{
+		OutError = TEXT("Invalid envelope JSON");
+		return false;
+	}
+	return ParseEnvelopeObject(Root, OutEnvelope, OutError);
+}
+
+bool UAIPBlueprintLibrary::ParseBoardLatestPayload(const FString& Json, TArray<FAIPEnvelope>& OutEnvelopes, FString& OutError)
+{
+	OutError.Reset();
+	OutEnvelopes.Reset();
+	TSharedPtr<FJsonObject> Root;
+	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Json);
+	if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+	{
+		OutError = TEXT("Invalid board JSON");
+		return false;
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* Arr = nullptr;
+	if (!Root->TryGetArrayField(TEXT("envelopes"), Arr) || !Arr)
+	{
+		OutError = TEXT("Board payload missing envelopes array");
+		return false;
+	}
+
+	for (const TSharedPtr<FJsonValue>& V : *Arr)
+	{
+		const TSharedPtr<FJsonObject> Obj = V.IsValid() ? V->AsObject() : nullptr;
+		FAIPEnvelope Env;
+		FString Err;
+		if (!ParseEnvelopeObject(Obj, Env, Err))
+		{
+			continue;
+		}
+		OutEnvelopes.Add(Env);
+	}
+	return true;
+}
+
 static bool RuleMatches(const FAIPEnvelope& Envelope, const TSharedPtr<FJsonObject>& Match)
 {
 	if (!Match.IsValid())

@@ -259,29 +259,47 @@
       ].join("\n")
     ];
 
-    const ENVELOPE = {
-      aip: "0.1",
-      kind: "event",
-      id: "aip:web:main-breaker:01",
-      type: "signal.breaker",
-      label: "Main Breaker",
-      source: {
-        world: "web",
-        app: "aip-switch",
-        scene: "crt-breaker",
-        issuedAt: "2026-08-22T07:00:00Z"
-      },
-      provenance: {
-        origin: "AIP web switch",
-        discoveredBy: "operator:local",
-        history: ["breaker opened", "operator pulled the lever"]
-      },
-      context: {
-        power: { scale: "relative", tier: "high", basis: "web-switch local signal strength" }
-      },
-      capabilities: ["equip", "display", "quest-flag"],
-      rights: { owner: "operator:local", transferable: false, displayable: true }
-    };
+    const SESSION = "demo";
+    const WRITE_KEY = "web-demo";
+
+    function resolveBoardUrl() {
+      const q = new URLSearchParams(location.search).get("board");
+      if (q) return q.replace(/\/$/, "");
+      if (typeof window.AIP_BOARD_URL === "string" && window.AIP_BOARD_URL) {
+        return window.AIP_BOARD_URL.replace(/\/$/, "");
+      }
+      if (location.port === "8788") return location.origin;
+      if (location.protocol === "https:") return "";
+      return "http://127.0.0.1:8788";
+    }
+
+    function makeBreakerEnvelope() {
+      const issuedAt = new Date().toISOString();
+      const stamp = issuedAt.replace(/[^0-9]/g, "").slice(0, 14);
+      return {
+        aip: "0.1",
+        kind: "event",
+        id: "aip:web:main-breaker:" + stamp,
+        type: "signal.breaker",
+        label: "Main Breaker",
+        source: {
+          world: "web",
+          app: "aip-switch",
+          scene: "crt-breaker",
+          issuedAt
+        },
+        provenance: {
+          origin: "AIP web switch",
+          discoveredBy: "operator:local",
+          history: ["breaker opened", "operator pulled the lever"]
+        },
+        context: {
+          power: { scale: "relative", tier: "high", basis: "web-switch local signal strength" }
+        },
+        capabilities: ["equip", "display", "quest-flag"],
+        rights: { owner: "operator:local", transferable: false, displayable: true }
+      };
+    }
 
     const leverEl = document.getElementById("lever");
     const statusEl = document.getElementById("status");
@@ -327,30 +345,41 @@
       }, 12);
     }
 
-    function downloadEnvelope() {
-      const blob = new Blob([JSON.stringify(ENVELOPE, null, 2) + "\n"], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "aip_web_main-breaker_01.aip.json";
-      a.click();
-      URL.revokeObjectURL(a.href);
+    async function postBreaker(envelope) {
+      const board = resolveBoardUrl();
+      if (!board) {
+        return { ok: false, reason: "no-board" };
+      }
+      try {
+        const res = await fetch(board + "/envelopes?session=" + encodeURIComponent(SESSION), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-AIP-Write-Key": WRITE_KEY
+          },
+          body: JSON.stringify({ envelope })
+        });
+        return { ok: res.ok, status: res.status };
+      } catch {
+        return { ok: false, reason: "fetch" };
+      }
     }
 
     async function emitEnvelope() {
+      const envelope = makeBreakerEnvelope();
       statusEl.textContent = "SIGNAL ARMED";
-      typeJson(JSON.stringify(ENVELOPE, null, 2));
-      try {
-        const local = location.hostname === "127.0.0.1" || location.hostname === "localhost";
-        const pullUrl = local ? "/pull" : "http://127.0.0.1:8787/pull";
-        const res = await fetch(pullUrl, { method: "POST", headers: { "Content-Type": "application/json" } });
-        if (!res.ok) throw new Error("no local switch server");
-        const body = await res.json();
-        statusEl.textContent = "ENVELOPE WRITTEN";
-        hintEl.textContent = body.path ? ("INBOX ← " + body.path) : "WROTE exchange/inbox";
-      } catch (err) {
-        statusEl.textContent = "DOWNLOAD .AIP.JSON";
-        hintEl.textContent = "FILE SAVED — drop into aip/exchange/inbox or: npm run aip -- exchange write-inbox ../../examples/main-breaker.aip.json";
-        downloadEnvelope();
+      typeJson(JSON.stringify(envelope, null, 2));
+      const result = await postBreaker(envelope);
+      if (result.ok) {
+        statusEl.textContent = "POSTED TO BOARD";
+        hintEl.textContent = "Unreal maps signal.breaker → LinkBeam (keys 1/2). No file download.";
+        return;
+      }
+      statusEl.textContent = "BOARD UNREACHABLE";
+      if (result.reason === "no-board") {
+        hintEl.textContent = "HTTPS cannot POST to localhost. Open this CRT from http://127.0.0.1:8788/switch (npm run board) or pass ?board=https://your-board";
+      } else {
+        hintEl.textContent = "Start the envelope board on :8788 (grants/decentraland: npm run board). Unreal polls GET /latest.";
       }
     }
 

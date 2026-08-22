@@ -2,33 +2,24 @@
 
 A public CRT breaker. Pulling the lever is a **source-world event**. It does not name Unreal guns. A destination (the Unreal FPS reference) may interpret `signal.breaker` as unlocking a local LinkBeam.
 
+## Local demo (three-window loop)
+
+With the envelope board running (`grants/decentraland`: `npm run board`):
+
+**http://127.0.0.1:8788/switch**
+
+Pull once. The page POSTs a **new** timestamped `signal.breaker` (`X-AIP-Write-Key: web-demo`). Unreal polls `GET /latest` and maps that event. No player JSON download.
+
+`aip switch serve` still hosts this HTML on :8787; the page posts to :8788, not to inbox `/pull`.
+
 ## Public page (aeonsmash.com)
 
 https://aeonsmash.com/#aip-switch
 
-Click / Space / Enter to pull. The envelope downloads. Drop it in Unreal inbox:
+Same POST. A page served over HTTPS cannot reach `http://127.0.0.1:8788` (mixed content). Point it at a hosted board with `?board=` or `VITE_AIP_BOARD_URL`. Until that exists, use the local CRT above.
 
-```bash
-cd sdk/typescript
-npm run aip -- exchange write-inbox ../../examples/main-breaker.aip.json
-```
-
-Or save the downloaded `aip_web_main-breaker_01.aip.json` into `exchange/inbox/`.
-
-Static copy: https://aeonsmash.com/aip/main-breaker.aip.json
-
-## Optional local inbox write
-
-If `aip switch serve` is running on this machine, the public page will POST to `http://127.0.0.1:8787/pull` and write inbox without a download.
-
-```bash
-cd sdk/typescript
-npm run build
-npm run aip -- switch serve
-```
-
-Then Play Unreal, rest after wave 1, **E** at the terminal.
+Static example copy (not “already pulled”): https://aeonsmash.com/aip/main-breaker.aip.json
 
 ## Non-goals
 
-No Unreal sockets. No live sync. The webpage emits an envelope; Unreal still loads files on **E**.
+No Unreal sockets. The webpage emits an envelope onto the board; Unreal maps it locally. File inbox is an operator fallback only.

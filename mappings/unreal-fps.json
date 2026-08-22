@@ -13,6 +13,21 @@
   "rules": [
     {
       "match": {
+        "type": "signal.box"
+      },
+      "interpretation": {
+        "principle": "destination-sovereignty",
+        "note": "A DCL box click is not a gun. Unreal FPS maps that event to revealing the local AIP terminal.",
+        "localType": "world.terminal",
+        "localActor": "AIP_Terminal",
+        "upgrade": "reveal-terminal",
+        "damageMultiplier": 1.0,
+        "acceptedCapabilities": ["display", "quest-flag"],
+        "ignoredCapabilities": ["equip"]
+      }
+    },
+    {
+      "match": {
         "type": "signal.breaker",
         "powerTier": ["high", "exceptional"]
       },

@@ -40,8 +40,9 @@ AAIPTerminal::AAIPTerminal()
 	PromptText->SetupAttachment(Root);
 	PromptText->SetRelativeLocation(FVector(0.f, 0.f, 240.f));
 	PromptText->SetHorizontalAlignment(EHTA_Center);
-	PromptText->SetText(FText::FromString(TEXT("AIP Terminal\n[E] Load inbox (LinkBeam)\n[F] Export sigil")));
+	PromptText->SetText(FText::FromString(TEXT("AIP Terminal\n[E] Signal other worlds\n[F] Export sigil")));
 	PromptText->SetWorldSize(28.f);
+	bRevealed = false;
 }
 
 void AAIPTerminal::BeginPlay()
@@ -49,6 +50,18 @@ void AAIPTerminal::BeginPlay()
 	Super::BeginPlay();
 	InteractVolume->OnComponentBeginOverlap.AddDynamic(this, &AAIPTerminal::HandleBeginOverlap);
 	InteractVolume->OnComponentEndOverlap.AddDynamic(this, &AAIPTerminal::HandleEndOverlap);
+	SetRevealed(bRevealed);
+}
+
+void AAIPTerminal::SetRevealed(bool bInRevealed)
+{
+	bRevealed = bInRevealed;
+	SetActorHiddenInGame(!bRevealed);
+	SetActorEnableCollision(bRevealed);
+	if (PromptText)
+	{
+		PromptText->SetHiddenInGame(!bRevealed);
+	}
 }
 
 void AAIPTerminal::HandleBeginOverlap(

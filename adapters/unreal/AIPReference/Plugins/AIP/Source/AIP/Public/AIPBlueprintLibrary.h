@@ -35,6 +35,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AIP")
 	static bool LoadAipEnvelopeFromInbox(FAIPEnvelope& OutEnvelope, FString& OutError, const FString& PreferredBaseName = TEXT(""));
 
+	UFUNCTION(BlueprintCallable, Category = "AIP")
+	static bool ParseEnvelopeFromJsonString(const FString& Json, FAIPEnvelope& OutEnvelope, FString& OutError);
+
+	UFUNCTION(BlueprintCallable, Category = "AIP")
+	static bool ParseBoardLatestPayload(const FString& Json, TArray<FAIPEnvelope>& OutEnvelopes, FString& OutError);
+
 	/** Apply mappings/unreal-fps.json rules (destination-owned data, not a C++ switch). */
 	UFUNCTION(BlueprintCallable, Category = "AIP")
 	static bool MapEnvelopeForUnrealFps(const FAIPEnvelope& Envelope, FAIPMappedInterpretation& OutMapped, FString& OutError);

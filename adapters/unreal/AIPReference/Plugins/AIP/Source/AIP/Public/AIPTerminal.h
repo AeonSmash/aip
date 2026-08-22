@@ -10,8 +10,8 @@ class UTextRenderComponent;
 class UPrimitiveComponent;
 
 /**
- * Mid-field terminal. Player presses Interact (E) while overlapping to load inbox envelope.
- * Press Export (F) to write a sigil to outbox.
+ * Hidden until signal.box. E posts signal.terminal to the envelope board.
+ * Inbox load remains as an operator fallback. F exports a sigil to outbox.
  */
 UCLASS()
 class AIP_API AAIPTerminal : public AActor
@@ -28,6 +28,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AIP")
 	bool TryExportSigil(FString& OutStatus);
+
+	UFUNCTION(BlueprintCallable, Category = "AIP")
+	void SetRevealed(bool bInRevealed);
+
+	UFUNCTION(BlueprintPure, Category = "AIP")
+	bool IsRevealed() const { return bRevealed; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AIP")
 	TObjectPtr<USceneComponent> Root;
@@ -69,4 +75,6 @@ protected:
 
 	UPROPERTY()
 	TWeakObjectPtr<APawn> OverlappingPawn;
+
+	bool bRevealed = false;
 };

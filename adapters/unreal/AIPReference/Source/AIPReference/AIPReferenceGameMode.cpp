@@ -33,12 +33,18 @@ void AAIPReferenceGameMode::EnsureArenaActors()
 	for (TActorIterator<AAIPTerminal> It(World); It; ++It)
 	{
 		bTerminal = true;
+		It->SetRevealed(false);
 		break;
 	}
 	if (!bTerminal)
 	{
 		World->SpawnActor<AAIPTerminal>(AAIPTerminal::StaticClass(), TerminalSpawnLocation, FRotator::ZeroRotator, Params);
-		UE_LOG(LogTemp, Log, TEXT("AIP: spawned terminal at %s"), *TerminalSpawnLocation.ToString());
+		UE_LOG(LogTemp, Log, TEXT("AIP: spawned hidden terminal at %s"), *TerminalSpawnLocation.ToString());
+		for (TActorIterator<AAIPTerminal> It(World); It; ++It)
+		{
+			It->SetRevealed(false);
+			break;
+		}
 	}
 
 	bool bTower = false;

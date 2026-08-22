@@ -59,6 +59,25 @@ describe("mapEnvelope", () => {
     assert.ok(mapped.ignoredCapabilities.includes("equip"));
   });
 
+  it("maps signal.box for unreal-fps terminal reveal", () => {
+    const box = {
+      aip: "0.1",
+      kind: "event",
+      id: "aip:dcl:box-1:test",
+      type: "signal.box",
+      label: "Box 1",
+      source: { world: "decentraland", app: "aip-dcl-reference" },
+      capabilities: ["display", "quest-flag"],
+    };
+    const env = validateEnvelope(box, { schemaPath });
+    assert.equal(env.ok, true);
+    if (!env.ok) return;
+    const mapped = mapEnvelope(env.envelope, load("mappings/unreal-fps.json"));
+    assert.equal(mapped.localType, "world.terminal");
+    assert.equal(mapped.upgrade, "reveal-terminal");
+    assert.ok(mapped.acceptedCapabilities.includes("display"));
+  });
+
   it("maps Main Breaker for unreal-fps LinkBeam unlock", () => {
     const env = validateEnvelope(load("examples/main-breaker.aip.json"), { schemaPath });
     assert.equal(env.ok, true);

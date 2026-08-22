@@ -9,6 +9,34 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.3] - 2026-08-22
+
+Three-world HTTP envelope board. Envelope schema remains **0.1**.
+
+### Added
+
+- Unreal `UAIPBoardSubsystem` polls `GET /latest` (~1s). `signal.box` reveals
+  the hidden AIP terminal. **E** POSTs `signal.terminal`. `signal.breaker`
+  maps to LinkBeam unlock
+- Mapping rule: `signal.box` → `upgrade: reveal-terminal` (`world.terminal`)
+- Local CRT (`adapters/web/switch`, also `GET /switch` on the board) POSTs a
+  new timestamped `signal.breaker` (`X-AIP-Write-Key: web-demo`)
+
+### Changed
+
+- Live loop no longer requires a player JSON download or inbox **E** load
+- Unreal starts pistol-only; terminal stays hidden until `signal.box`
+- `@aeonsmash/aip` and `AIP.uplugin` VersionName **0.5.2 → 0.5.3**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- No Unreal game sockets. Demo-grade write keys, not accounts (Tier 2).
+- HTTPS aeonsmash.com cannot POST to `http://127.0.0.1:8788` (mixed content).
+  Local CRT or a hosted board URL (`?board=` / `VITE_AIP_BOARD_URL`).
+- Epoch-Website **1.9.4** (CRT POST; not necessarily deployed). DCL plaque
+  opens https://aeonsmash.com/#aip-switch
+
 ## [0.5.2] - 2026-08-22
 
 LinkBeam fires discrete green energy spheres. Envelope schema remains **0.1**.

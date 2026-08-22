@@ -2,6 +2,7 @@
 
 #include "AIPReferenceCharacter.h"
 #include "AIPBlueprintLibrary.h"
+#include "AIPBoardSubsystem.h"
 #include "AIPPlayerUpgradeComponent.h"
 #include "AIPSovereigntyWidget.h"
 #include "AIPTerminal.h"
@@ -12,6 +13,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/TextRenderComponent.h"
 #include "EnhancedInputComponent.h"
 #include "InputCoreTypes.h"
 #include "InputActionValue.h"
@@ -111,6 +113,10 @@ AAIPTerminal* AAIPReferenceCharacter::FindOverlappingTerminal() const
 	const FVector Loc = GetActorLocation();
 	for (TActorIterator<AAIPTerminal> It(World); It; ++It)
 	{
+		if (!It->IsRevealed())
+		{
+			continue;
+		}
 		const float DistSq = FVector::DistSquared(Loc, It->GetActorLocation());
 		if (DistSq < 250.f * 250.f && DistSq < BestDistSq)
 		{
@@ -126,12 +132,27 @@ void AAIPReferenceCharacter::OnAipInteract()
 	AAIPTerminal* Terminal = FindOverlappingTerminal();
 	if (!Terminal)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AIP: no terminal nearby (stand next to the mid-field cube)."));
+		UE_LOG(LogTemp, Warning, TEXT("AIP: no terminal nearby (wait for signal.box, then stand next to the cube)."));
 		return;
 	}
 
-	FString Status;
-	const bool bOk = Terminal->TryLoadInboxAndApply(this, Status);
+	FString Status = TEXT("Posted signal.terminal to the envelope board");
+	if (UWorld* World = GetWorld())
+	{
+		if (UAIPBoardSubsystem* Board = World->GetSubsystem<UAIPBoardSubsystem>())
+		{
+			Board->NotifyTerminalActivated();
+		}
+		else
+		{
+			Status = TEXT("No AIP board subsystem");
+		}
+	}
+
+	if (Terminal->PromptText)
+	{
+		Terminal->PromptText->SetText(FText::FromString(Status));
+	}
 	UE_LOG(LogTemp, Log, TEXT("AIP Interact: %s"), *Status);
 
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -143,11 +164,6 @@ void AAIPReferenceCharacter::OnAipInteract()
 				It->SetSummary(AIPUpgrade ? AIPUpgrade->GetHudSummary() : Status);
 			}
 		}
-	}
-
-	if (bOk && AIPUpgrade)
-	{
-		UE_LOG(LogTemp, Log, TEXT("AIP HUD: %s"), *AIPUpgrade->GetHudSummary());
 	}
 }
 
