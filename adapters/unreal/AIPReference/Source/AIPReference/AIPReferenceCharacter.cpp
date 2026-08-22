@@ -136,7 +136,7 @@ void AAIPReferenceCharacter::OnAipInteract()
 		return;
 	}
 
-	FString Status = TEXT("Posted signal.terminal to the envelope board");
+	FString Status = TEXT("Visit Decentraland scene for next clue");
 	if (UWorld* World = GetWorld())
 	{
 		if (UAIPBoardSubsystem* Board = World->GetSubsystem<UAIPBoardSubsystem>())

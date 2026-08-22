@@ -9,6 +9,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.4] - 2026-08-22
+
+Plaque and terminal copy for the three-world loop. Envelope schema remains **0.1**.
+
+### Changed
+
+- After **E**, the Unreal terminal prompt is “Visit Decentraland scene for next clue”
+- `@aeonsmash/aip` and `AIP.uplugin` VersionName **0.5.3 → 0.5.4**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- DCL scene **0.2.1**: switch plaque hidden until `signal.terminal`; sign faces the player.
+
 ## [0.5.3] - 2026-08-22
 
 Three-world HTTP envelope board. Envelope schema remains **0.1**.

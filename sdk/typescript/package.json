@@ -1,6 +1,6 @@
 {
   "name": "@aeonsmash/aip",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "AIP Core — validate envelopes and resolve destination-owned mappings",
   "license": "MIT",
   "type": "module",
