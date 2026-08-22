@@ -9,6 +9,28 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.2] - 2026-08-22
+
+LinkBeam fires discrete green energy spheres. Envelope schema remains **0.1**.
+
+### Added
+
+- `AAIPLinkSphereProjectile` — round green energy shot with muzzle glow; scale
+  lerps down as it travels away from the player
+
+### Changed
+
+- LinkBeam LMB/RMB: 0.5s volley of projectiles instead of a debug line beam
+  (hold fire reads as multiple shots in the air)
+- `@aeonsmash/aip` and `AIP.uplugin` VersionName **0.5.1 → 0.5.2**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Unreal still loads files on **E**. No game sockets.
+- Player file-download from the web switch is operator/demo transport, not a
+  player loop (see Epoch-Website **1.9.3**).
+
 ## [0.5.1] - 2026-08-22
 
 Public CRT breaker on aeonsmash.com. Envelope schema remains **0.1**.

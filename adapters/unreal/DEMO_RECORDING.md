@@ -28,7 +28,7 @@ Open `adapters/unreal/AIPReference/AIPReference.uproject` → Play.
 | 0:15 | Web switch | ASCII lever clunks CLOSED; envelope types out |
 | 0:30 | Terminal | Walk to cube, press E |
 | 0:38 | HUD | Main Breaker → weapon.linkbeam / unlock-linkbeam, ignore equip |
-| 0:45 | LinkBeam | Green beam; RMB repair on the core |
+| 0:45 | LinkBeam | Green energy spheres every 0.5s (shrink with range); RMB repair on the core |
 | 1:05 | F | Outbox write; optional CLI map to Decentraland museum |
 | 1:15 | End card | github.com/AeonSmash/aip |
 

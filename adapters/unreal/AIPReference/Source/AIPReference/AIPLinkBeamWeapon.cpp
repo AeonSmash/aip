@@ -1,7 +1,8 @@
 #include "AIPLinkBeamWeapon.h"
 
-#include "AIPCoreTower.h"
-#include "AIPInvader.h"
+#include "AIPLinkSphereProjectile.h"
+#include "Engine/World.h"
+#include "GameFramework/Pawn.h"
 
 AAIPLinkBeamWeapon::AAIPLinkBeamWeapon()
 {
@@ -13,6 +14,18 @@ AAIPLinkBeamWeapon::AAIPLinkBeamWeapon()
 void AAIPLinkBeamWeapon::SetUnlocked(bool bInUnlocked)
 {
 	bUnlocked = bInUnlocked;
+}
+
+void AAIPLinkBeamWeapon::StartFire()
+{
+	Super::StartFire();
+	TryLaunch(false);
+}
+
+void AAIPLinkBeamWeapon::StartAltFire()
+{
+	Super::StartAltFire();
+	TryLaunch(true);
 }
 
 void AAIPLinkBeamWeapon::Tick(float DeltaTime)
@@ -32,18 +45,27 @@ void AAIPLinkBeamWeapon::Tick(float DeltaTime)
 
 	if (bFiring)
 	{
-		PulseTimer = PulseInterval;
-		Pulse(false);
+		TryLaunch(false);
 	}
 	else if (bAltFiring)
 	{
-		PulseTimer = PulseInterval;
-		Pulse(true);
+		TryLaunch(true);
 	}
 }
 
-void AAIPLinkBeamWeapon::Pulse(bool bRepair)
+void AAIPLinkBeamWeapon::TryLaunch(bool bRepair)
 {
+	if (!bEquipped || !bUnlocked || PulseTimer > 0.f)
+	{
+		return;
+	}
+
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		return;
+	}
+
 	FVector Start;
 	FVector End;
 	if (!GetAim(Start, End, Range))
@@ -51,29 +73,29 @@ void AAIPLinkBeamWeapon::Pulse(bool bRepair)
 		return;
 	}
 
-	FHitResult Hit;
-	const bool bHit = LineTrace(Range, Hit);
-	const FVector BeamEnd = bHit ? Hit.ImpactPoint : End;
-	const FColor Color = bRepair ? FColor(80, 220, 90) : FColor(40, 200, 70);
-	DrawBeam(Start + GetActorForwardVector() * 20.f, BeamEnd, Color, PulseInterval + 0.02f, 2.2f);
-
-	if (!bHit)
+	const FVector Direction = (End - Start).GetSafeNormal();
+	if (Direction.IsNearlyZero())
 	{
 		return;
 	}
 
-	AActor* HitActor = Hit.GetActor();
-	if (bRepair)
+	FActorSpawnParameters Params;
+	Params.Owner = GetOwner();
+	Params.Instigator = Cast<APawn>(GetOwner());
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	const FVector SpawnLoc = Start + Direction * MuzzleOffset;
+	AAIPLinkSphereProjectile* Shot = World->SpawnActor<AAIPLinkSphereProjectile>(
+		AAIPLinkSphereProjectile::StaticClass(),
+		SpawnLoc,
+		Direction.Rotation(),
+		Params);
+
+	if (!Shot)
 	{
-		if (AAIPCoreTower* Tower = Cast<AAIPCoreTower>(HitActor))
-		{
-			Tower->Repair(RepairPerPulse);
-		}
 		return;
 	}
 
-	if (AAIPInvader* Invader = Cast<AAIPInvader>(HitActor))
-	{
-		Invader->ReceiveWeaponDamage(DamagePerPulse, GetOwner());
-	}
+	PulseTimer = PulseInterval;
+	Shot->InitShot(Direction, bRepair, DamagePerShot, RepairPerShot, GetOwner(), Range);
 }

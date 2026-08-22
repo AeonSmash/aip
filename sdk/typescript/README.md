@@ -1,6 +1,6 @@
 # @aeonsmash/aip
 
-TypeScript AIP Core **0.5.1**: validate 0.1 envelopes and resolve destination-owned mappings.
+TypeScript AIP Core **0.5.2**: validate 0.1 envelopes and resolve destination-owned mappings.
 
 ## Setup
 

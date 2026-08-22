@@ -37,7 +37,7 @@ Requires Visual Studio 2022 Build Tools (MSVC), Windows SDK, and .NET Framework 
 "C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\Build.bat" AIPReferenceEditor Win64 Development -Project="...\AIPReference.uproject" -WaitMutex
 ```
 
-Verified compile: **Succeeded** (2026-08-22) on UE 5.8.1. PIE Play verified after CoreRedirects. Presentation **0.5.1**.
+Verified compile: **Succeeded** (2026-08-22) on UE 5.8.1. PIE Play verified after CoreRedirects. Presentation **0.5.2**.
 
 ## Layout
 

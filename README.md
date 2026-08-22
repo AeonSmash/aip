@@ -93,9 +93,9 @@ No particular engine or world is a requirement of AIP Core. Unreal, Decentraland
 
 ## Current status
 
-**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.1).**
+**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.2).**
 
-- TypeScript core validates and maps envelopes (`npm test` green); `@aeonsmash/aip` **0.5.1**
+- TypeScript core validates and maps envelopes (`npm test` green); `@aeonsmash/aip` **0.5.2**
 - File exchange contract under `exchange/`
 - Web CRT switch at https://aeonsmash.com/#aip-switch emits `signal.breaker`; Unreal maps it to LinkBeam
 - Unreal 5.8 First Person reference (PIE): start with pistol, AIP-unlocked LinkBeam, core tower, NPC waves
