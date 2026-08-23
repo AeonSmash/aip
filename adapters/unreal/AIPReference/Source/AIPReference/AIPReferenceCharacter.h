@@ -135,6 +135,8 @@ protected:
 	int32 EquippedWeaponIndex = 0;
 	bool bLinkBeamUnlocked = false;
 	float FootstepTimer = 0.f;
+	bool bLmbDown = false;
+	bool bRmbDown = false;
 
 public:
 	UFUNCTION(BlueprintPure, Category = "AIP|Weapon")

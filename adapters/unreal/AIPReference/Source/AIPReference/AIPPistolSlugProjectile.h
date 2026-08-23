@@ -7,7 +7,6 @@
 class USphereComponent;
 class UStaticMeshComponent;
 class UProjectileMovementComponent;
-class UPointLightComponent;
 
 /** Small brass slug from the starter pistol. Faster and thinner than LinkBeam orbs. */
 UCLASS()
@@ -31,9 +30,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AIP|Weapon")
 	TObjectPtr<UProjectileMovementComponent> Movement;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AIP|Weapon")
-	TObjectPtr<UPointLightComponent> Glow;
-
 protected:
 	UFUNCTION()
 	void OnSphereOverlap(UPrimitiveComponent* Overlapped, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -42,13 +38,13 @@ protected:
 	void RefreshScale();
 
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
-	float StartScale = 0.22f;
+	float StartScale = 1.f;
 
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
-	float EndScale = 0.12f;
+	float EndScale = 1.f;
 
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
-	float Speed = 5600.f;
+	float Speed = 3800.f;
 
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
 	float GravityScale = 0.35f;

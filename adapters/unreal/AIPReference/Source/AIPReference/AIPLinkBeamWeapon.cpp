@@ -5,11 +5,15 @@
 #include "Components/AudioComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Pawn.h"
+#include "UObject/SoftObjectPath.h"
 
 AAIPLinkBeamWeapon::AAIPLinkBeamWeapon()
 {
-	ViewScale = FVector(0.42f, 0.1f, 0.1f);
-	ViewOffset = FVector(40.f, 18.f, -14.f);
+	ViewMeshAsset = FSoftObjectPath(TEXT("/Game/AIP/Weapons/LinkGun.LinkGun"));
+	ViewObjFile = TEXT("AIP/Weapons/LinkGun.obj");
+	ViewScale = FVector(1.f);
+	ViewOffset = FVector(24.f, 10.f, -8.f);
+	ViewRotation = FRotator(0.f, -90.f, 0.f);
 	bUnlocked = false;
 
 	LinkHum = CreateDefaultSubobject<UAudioComponent>(TEXT("LinkHum"));

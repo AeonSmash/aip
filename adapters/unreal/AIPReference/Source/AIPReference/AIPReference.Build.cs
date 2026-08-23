@@ -21,7 +21,8 @@ public class AIPReference : ModuleRules
 			"GameplayStateTreeModule",
 			"UMG",
 			"Slate",
-			"AIP"
+			"AIP",
+			"ProceduralMeshComponent"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });

@@ -136,7 +136,7 @@ void UAIPSfxSubsystem::Play(FName Cue, float Volume)
 	}
 
 	USoundWaveProcedural* Wave = MakeWave(Loaded, false);
-	UGameplayStatics::PlaySound2D(World, Wave, FMath::Clamp(Volume, 0.f, 1.f));
+UGameplayStatics::PlaySound2D(World, Wave, FMath::Clamp(Volume, 0.f, 1.f), 1.f, 0.f, nullptr, nullptr, true);
 }
 
 void UAIPSfxSubsystem::PlayLoop(UAudioComponent* Component, FName Cue, float Volume)

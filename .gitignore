@@ -50,6 +50,8 @@ exchange/outbox/*.aip.json
 
 # Map FBX exceeds GitHub's 100MB blob limit (aeonicMap.fbx ~104MB). Keep local.
 adapters/unreal/art/map/*.fbx
+adapters/unreal/AIPReference/Content/Maps/aeonicMap.uasset
+adapters/unreal/AIPReference/Content/Maps/Mesh_0_002.uasset
 
 # Decentraland preview build
 adapters/decentraland/bin/

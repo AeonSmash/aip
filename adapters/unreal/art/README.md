@@ -1,9 +1,17 @@
 # Blender / FBX drop folder
 
-Placeholder cubes ship in the Unreal reference. Drop original art here, then import in the editor to:
+Guns in `weapons/` are wired as first-person viewmodels. Copy/import them in the
+editor to `Content/AIP/Weapons/` (or run `weapons/import_weapon_fbx.py` from the
+Output Log). Map pieces still go to `Content/AIP/Map/`.
 
-- `Content/AIP/Map/` — modular environment FBX
-- `Content/AIP/Weapons/` — LinkBeam and CyanSniper viewmodels
+Source files in this folder:
+
+| FBX | Unreal mesh | Equipped as |
+| --- | --- | --- |
+| `main-SNIPERriffle.fbx` | `/Game/AIP/Weapons/LightningGun` + `LightningGun.obj` | Starter pistol (cyan sniper is unused) |
+| `main-LINKgun.fbx` | `/Game/AIP/Weapons/LinkGun` + `LinkGun.obj` | LinkBeam after the CRT unlock |
+
+Regenerate the OBJ files with `python extract_fbx_mesh.py` after a new Blender export.
 
 ## Export
 

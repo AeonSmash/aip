@@ -9,6 +9,30 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.10] - 2026-08-23
+
+First-person viewmodels use the Blender gun FBX files. Envelope schema remains **0.1**.
+
+### Changed
+
+- Starter pistol viewmodel is `main-SNIPERriffle.fbx` (lightning gun). Cyan
+  sniper stays unused in the 60-second loop.
+- LinkBeam viewmodel is `main-LINKgun.fbx`
+- First-person guns load `LightningGun.obj` / `LinkGun.obj` extracted from the
+  Blender FBX so PIE does not wait on an editor FBX import
+- Pistol shot is a visible brass slug (no orange point light)
+
+### Fixed
+
+- Unreal reveals the AIP terminal from the hosted board's `signal.box`. That
+  requires Arkavia backend **1.26.5** (Supabase persist) and migration **021**.
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Close the editor, compile, or run `art/weapons/import_weapon_fbx.py` from
+  the Output Log if the meshes are not yet in Content.
+
 ## [0.5.9] - 2026-08-23
 
 Decentraland Box 1 scene is in the public repo. Envelope schema remains **0.1**.

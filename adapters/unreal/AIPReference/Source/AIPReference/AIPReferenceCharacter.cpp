@@ -187,11 +187,11 @@ void AAIPReferenceCharacter::SpawnArenaWeapons()
 
 	if (StarterPistol)
 	{
-		StarterPistol->AttachToOwnerCamera();
+		StarterPistol->AttachToOwnerCamera(FirstPersonCameraComponent);
 	}
 	if (LinkBeam)
 	{
-		LinkBeam->AttachToOwnerCamera();
+		LinkBeam->AttachToOwnerCamera(FirstPersonCameraComponent);
 		LinkBeam->SetUnlocked(false);
 	}
 	EquipWeaponIndex(0);
@@ -269,6 +269,31 @@ FString AAIPReferenceCharacter::GetEquippedWeaponName() const
 void AAIPReferenceCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		const bool bLmb = PC->IsInputKeyDown(EKeys::LeftMouseButton);
+		if (bLmb && !bLmbDown)
+		{
+			OnFirePressed();
+		}
+		else if (!bLmb && bLmbDown)
+		{
+			OnFireReleased();
+		}
+		bLmbDown = bLmb;
+
+		const bool bRmb = PC->IsInputKeyDown(EKeys::RightMouseButton);
+		if (bRmb && !bRmbDown)
+		{
+			OnAltPressed();
+		}
+		else if (!bRmb && bRmbDown)
+		{
+			OnAltReleased();
+		}
+		bRmbDown = bRmb;
+	}
 
 	FootstepTimer -= DeltaTime;
 	const UCharacterMovementComponent* Move = GetCharacterMovement();

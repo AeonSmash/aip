@@ -5,6 +5,7 @@
 #include "AIPInvaderStart.h"
 #include "AIPTerminal.h"
 #include "AIPWaveDirector.h"
+#include "Engine/StaticMeshActor.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
 
@@ -28,6 +29,23 @@ void AAIPReferenceGameMode::EnsureArenaActors()
 
 	FActorSpawnParameters Params;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	// FBX import can drop a world-space gun into the map. Hide it so only the viewmodel shows.
+	for (TActorIterator<AStaticMeshActor> It(World); It; ++It)
+	{
+		UStaticMeshComponent* MeshComp = It->GetStaticMeshComponent();
+		const UStaticMesh* Mesh = MeshComp ? MeshComp->GetStaticMesh() : nullptr;
+		if (!Mesh)
+		{
+			continue;
+		}
+		const FString Name = Mesh->GetName();
+		if (Name.Contains(TEXT("LightningGun")) || Name.Contains(TEXT("LinkGun")) || Name.Contains(TEXT("SNIPERriffle")) || Name.Contains(TEXT("LINKgun")))
+		{
+			It->Destroy();
+			UE_LOG(LogTemp, Log, TEXT("AIP: removed stray world gun %s"), *Name);
+		}
+	}
 
 	bool bTerminal = false;
 	for (TActorIterator<AAIPTerminal> It(World); It; ++It)

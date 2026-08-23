@@ -2,7 +2,6 @@
 
 #include "AIPInvader.h"
 #include "AIPLinkSphereProjectile.h"
-#include "Components/PointLightComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
@@ -17,7 +16,7 @@ AAIPPistolSlugProjectile::AAIPPistolSlugProjectile()
 
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	SetRootComponent(Collision);
-	Collision->InitSphereRadius(14.f);
+	Collision->InitSphereRadius(8.f);
 	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Collision->SetCollisionObjectType(ECC_WorldDynamic);
 	Collision->SetCollisionResponseToAllChannels(ECR_Ignore);
@@ -35,7 +34,7 @@ AAIPPistolSlugProjectile::AAIPPistolSlugProjectile()
 	Mesh->SetCanEverAffectNavigation(false);
 	// Engine cylinder is Z-up; projectile forward is X.
 	Mesh->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
-	Mesh->SetRelativeScale3D(FVector(0.045f, 0.045f, 0.16f));
+	Mesh->SetRelativeScale3D(FVector(0.07f, 0.07f, 0.28f));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
 	if (CylinderMesh.Succeeded())
@@ -48,13 +47,6 @@ AAIPPistolSlugProjectile::AAIPPistolSlugProjectile()
 	{
 		Mesh->SetMaterial(0, ShapeMat.Object);
 	}
-
-	Glow = CreateDefaultSubobject<UPointLightComponent>(TEXT("Glow"));
-	Glow->SetupAttachment(Collision);
-	Glow->SetIntensity(2200.f);
-	Glow->SetAttenuationRadius(90.f);
-	Glow->SetCastShadows(false);
-	Glow->SetLightColor(FLinearColor(1.f, 0.62f, 0.18f));
 
 	Movement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement"));
 	Movement->UpdatedComponent = Collision;
@@ -92,12 +84,11 @@ void AAIPPistolSlugProjectile::InitShot(const FVector& Direction, float InDamage
 	SetActorRotation(Dir.Rotation());
 	SetLifeSpan((MaxRange / Speed) + 0.25f);
 
-	const FLinearColor Color(1.f, 0.62f, 0.18f);
+	const FLinearColor Brass(0.82f, 0.55f, 0.18f);
 	if (UMaterialInstanceDynamic* Mid = Mesh->CreateDynamicMaterialInstance(0))
 	{
-		Mid->SetVectorParameterValue(TEXT("Color"), Color);
+		Mid->SetVectorParameterValue(TEXT("Color"), Brass);
 	}
-	Glow->SetLightColor(Color);
 	RefreshScale();
 }
 
@@ -122,8 +113,6 @@ void AAIPPistolSlugProjectile::RefreshScale()
 	const float Alpha = FMath::Clamp(Distance / MaxRange, 0.f, 1.f);
 	const float Scale = FMath::Lerp(StartScale, EndScale, Alpha);
 	SetActorScale3D(FVector(Scale));
-	Glow->SetIntensity(FMath::Lerp(2200.f, 700.f, Alpha));
-	Glow->SetAttenuationRadius(FMath::Lerp(90.f, 36.f, Alpha));
 }
 
 void AAIPPistolSlugProjectile::OnSphereOverlap(UPrimitiveComponent* Overlapped, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -47,7 +47,7 @@ Requires Visual Studio 2022 Build Tools (MSVC), Windows SDK, and .NET Framework 
 "C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\Build.bat" AIPReferenceEditor Win64 Development -Project="...\AIPReference.uproject" -WaitMutex
 ```
 
-Verified compile: **Succeeded** (2026-08-22) on UE 5.8.1. Presentation **0.5.9**.
+Verified compile: **Succeeded** (2026-08-22) on UE 5.8.1. Presentation **0.5.10**.
 
 ## Layout
 
@@ -58,7 +58,7 @@ Verified compile: **Succeeded** (2026-08-22) on UE 5.8.1. Presentation **0.5.9**
 | `../exchange/` | File transport (operator fallback; no DirectoryWatcher) |
 | `../mappings/unreal-fps.json` | Destination-owned FPS rules (`signal.box` → reveal terminal; breaker → LinkBeam) |
 | `../web/` | CRT breaker source page |
-| `../art/` | Blender FBX drop folder (import to `Content/AIP/`) |
+| `../art/` | Blender FBX drop folder. Guns import to `Content/AIP/Weapons/` (lightning → pistol, linker → LinkBeam) |
 
 ## Controls
 

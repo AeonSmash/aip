@@ -4,11 +4,17 @@
 #include "AIPSfx.h"
 #include "Engine/World.h"
 #include "GameFramework/Pawn.h"
+#include "UObject/SoftObjectPath.h"
 
 AAIPStarterPistol::AAIPStarterPistol()
 {
-	ViewScale = FVector(0.22f, 0.1f, 0.08f);
-	ViewOffset = FVector(36.f, 18.f, -14.f);
+	// Lightning-gun FBX (art/weapons/main-SNIPERriffle.fbx). Cyan sniper is unused.
+	ViewMeshAsset = FSoftObjectPath(TEXT("/Game/AIP/Weapons/LightningGun.LightningGun"));
+	ViewObjFile = TEXT("AIP/Weapons/LightningGun.obj");
+	ViewScale = FVector(1.f);
+	ViewOffset = FVector(22.f, 10.f, -8.f);
+	// Blender FBX is Y-forward; camera is X-forward.
+	ViewRotation = FRotator(0.f, -90.f, 0.f);
 }
 
 void AAIPStarterPistol::StartFire()

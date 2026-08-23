@@ -94,6 +94,7 @@ void UAIPBoardSubsystem::HandleLatestPayload(const FString& Json, int32 Response
 	bPollInFlight = false;
 	if (!bSucceeded || ResponseCode != 200)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("AIP board poll failed code=%d ok=%s"), ResponseCode, bSucceeded ? TEXT("true") : TEXT("false"));
 		return;
 	}
 
@@ -130,14 +131,29 @@ void UAIPBoardSubsystem::RevealTerminal()
 		return;
 	}
 
+	AAIPTerminal* Terminal = nullptr;
 	for (TActorIterator<AAIPTerminal> It(World); It; ++It)
 	{
-		It->SetRevealed(true);
-		bTerminalRevealed = true;
-		AIPSfx::Play(World, TEXT("linkbeam_pulse"), 0.4f);
-		UE_LOG(LogTemp, Log, TEXT("AIP: revealed terminal from signal.box"));
+		Terminal = *It;
+		break;
+	}
+	if (!Terminal)
+	{
+		FActorSpawnParameters Params;
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		Terminal = World->SpawnActor<AAIPTerminal>(AAIPTerminal::StaticClass(), FVector(0.f, 800.f, 100.f), FRotator::ZeroRotator, Params);
+		UE_LOG(LogTemp, Log, TEXT("AIP: spawned terminal for signal.box reveal"));
+	}
+	if (!Terminal)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AIP: signal.box received but terminal spawn failed"));
 		return;
 	}
+
+	Terminal->SetRevealed(true);
+	bTerminalRevealed = true;
+	AIPSfx::Play(World, TEXT("linkbeam_pulse"), 0.4f);
+	UE_LOG(LogTemp, Log, TEXT("AIP: revealed terminal from signal.box"));
 }
 
 void UAIPBoardSubsystem::ApplyBreaker(const FAIPEnvelope& Envelope)

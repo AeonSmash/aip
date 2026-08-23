@@ -4,7 +4,7 @@
 #include "AIPWeapon.h"
 #include "AIPStarterPistol.generated.h"
 
-/** Weak starter pistol. Fires small brass slugs. No core repair. */
+/** Weak starter pistol. Viewmodel is the lightning-gun FBX. Fires brass slugs. No core repair. */
 UCLASS()
 class AIPREFERENCE_API AAIPStarterPistol : public AAIPWeapon
 {
