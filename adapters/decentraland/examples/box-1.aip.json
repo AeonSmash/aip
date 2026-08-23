@@ -1,0 +1,31 @@
+{
+  "aip": "0.1",
+  "kind": "event",
+  "id": "aip:dcl:box-1:example",
+  "type": "signal.box",
+  "label": "Box 1",
+  "source": {
+    "world": "decentraland",
+    "app": "aip-dcl-reference",
+    "scene": "box-1",
+    "issuedAt": "2026-08-22T19:00:00Z"
+  },
+  "provenance": {
+    "origin": "AIP Decentraland Box 1",
+    "discoveredBy": "operator:example",
+    "history": ["operator clicked Box 1"]
+  },
+  "context": {
+    "power": {
+      "scale": "relative",
+      "tier": "mid",
+      "basis": "dcl box local signal"
+    }
+  },
+  "capabilities": ["display", "quest-flag"],
+  "rights": {
+    "owner": "operator:example",
+    "transferable": false,
+    "displayable": true
+  }
+}

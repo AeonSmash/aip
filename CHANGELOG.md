@@ -9,6 +9,24 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.9] - 2026-08-23
+
+Decentraland Box 1 scene is in the public repo. Envelope schema remains **0.1**.
+
+### Added
+
+- `adapters/decentraland/` — SDK7 Box 1 reference (scene **0.2.4**), including
+  shared ElevenLabs SFX
+
+### Changed
+
+- `@aeonsmash/aip` and `AIP.uplugin` VersionName **0.5.8 → 0.5.9**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Preview: `cd adapters/decentraland && npm install && npm start`
+
 ## [0.5.8] - 2026-08-23
 
 ElevenLabs sound-generation clips in the demo. Envelope schema remains **0.1**.

@@ -1,7 +1,7 @@
 {
   "FileVersion": 3,
   "Version": 5,
-  "VersionName": "0.5.8",
+  "VersionName": "0.5.9",
   "FriendlyName": "AIP",
   "Description": "Aeonic Interoperability Protocol adapter — load envelopes, apply destination-owned mappings, export sigils.",
   "Category": "Interoperability",

@@ -1,0 +1,32 @@
+{
+  "ecs7": true,
+  "runtimeVersion": "7",
+  "display": {
+    "title": "AIP Box 1",
+    "description": "Decentraland source world for AIP. Click Box 1 to emit signal.box. This scene does not ship an Unreal gun.",
+    "favicon": "favicon_asset"
+  },
+  "owner": "",
+  "contact": {
+    "name": "AeonSmash",
+    "email": "aeonsmash@gmail.com"
+  },
+  "main": "bin/index.js",
+  "tags": ["aip", "interoperability", "aeonsmash"],
+  "scene": {
+    "parcels": ["0,0"],
+    "base": "0,0"
+  },
+  "spawnPoints": [
+    {
+      "name": "spawn",
+      "default": true,
+      "position": { "x": [8, 8], "y": [0, 0], "z": [2, 3] },
+      "cameraTarget": { "x": 8, "y": 1.4, "z": 8 }
+    }
+  ],
+  "requiredPermissions": ["USE_FETCH"],
+  "featureToggles": {
+    "voiceChat": "disabled"
+  }
+}

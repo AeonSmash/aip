@@ -1,0 +1,24 @@
+{
+  "destination": "decentraland",
+  "app": "aip-dcl-reference",
+  "interpretation": {
+    "principle": "destination-sovereignty",
+    "note": "Fallback. Prefer rules[]."
+  },
+  "rules": [
+    {
+      "match": {
+        "type": "signal.terminal",
+        "sourceWorld": "unreal"
+      },
+      "interpretation": {
+        "principle": "destination-sovereignty",
+        "note": "Unreal used its terminal. Decentraland maps that to an in-world breaker request, not a gun and not a file download.",
+        "localType": "sign.breaker-request",
+        "localEntity": "Plaque",
+        "acceptedCapabilities": ["display", "quest-flag"],
+        "ignoredCapabilities": ["equip"]
+      }
+    }
+  ]
+}

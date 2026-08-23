@@ -5,7 +5,7 @@ Target length: **60–120 seconds**. No narration required if on-screen text is 
 ## Prep
 
 ```bash
-cd C:\AeonSmash\Main-Workspace\grants\decentraland
+cd adapters/decentraland
 npm run board
 ```
 

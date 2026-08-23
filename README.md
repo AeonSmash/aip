@@ -45,6 +45,7 @@ This repository is the public presentation of AIP. It is intentionally small. In
 | [`sdk/typescript/`](sdk/typescript/) | Validator, mapping resolver, CLI, tests |
 | [`exchange/`](exchange/) | File-drop inbox/outbox transport |
 | [`adapters/web/`](adapters/web/) | CRT breaker switch (web source world) |
+| [`adapters/decentraland/`](adapters/decentraland/) | SDK7 Box 1 scene (source `signal.box`, destination plaque) |
 | [`adapters/unreal/`](adapters/unreal/) | UE 5.8 First Person reference + AIP plugin |
 | [`docs/architecture.md`](docs/architecture.md) | Destination sovereignty and engine-neutral adapters |
 | [`explainer/index.html`](explainer/index.html) | 90-second visual walkthrough |
@@ -61,7 +62,7 @@ npm run aip -- map --destination unreal-fps ../../examples/main-breaker.aip.json
 npm run aip -- map --destination decentraland ../../examples/arena-sigil.aip.json
 ```
 
-Pull the CRT breaker at http://127.0.0.1:8788/switch (envelope board running) or https://aeonsmash.com/#aip-switch (needs a hosted board URL). Then open [`adapters/unreal/AIPReference/AIPReference.uproject`](adapters/unreal/AIPReference/AIPReference.uproject), Play. Start with the pistol. The terminal stays hidden until DCL `signal.box`. **E** posts `signal.terminal`. The CRT pull unlocks LinkBeam. **F** exports a sigil.
+Pull the CRT breaker at http://127.0.0.1:8788/switch (envelope board running) or https://aeonsmash.com/#aip-switch (needs a hosted board URL). Preview the Box 1 scene with `cd adapters/decentraland && npm install && npm start`. Then open [`adapters/unreal/AIPReference/AIPReference.uproject`](adapters/unreal/AIPReference/AIPReference.uproject), Play. Start with the pistol. The terminal stays hidden until DCL `signal.box`. **E** posts `signal.terminal`. The CRT pull unlocks LinkBeam. **F** exports a sigil.
 
 ## Architecture
 
@@ -93,9 +94,9 @@ No particular engine or world is a requirement of AIP Core. Unreal, Decentraland
 
 ## Current status
 
-**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.8).**
+**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.9).**
 
-- TypeScript core validates and maps envelopes (`npm test` green); `@aeonsmash/aip` **0.5.8**
+- TypeScript core validates and maps envelopes (`npm test` green); `@aeonsmash/aip` **0.5.9**
 - File exchange contract under `exchange/`
 - Web CRT switch emits `signal.breaker` onto the envelope board; Unreal maps it to LinkBeam
 - Unreal 5.8 First Person reference (PIE): start with pistol, hidden terminal until `signal.box`, AIP-unlocked LinkBeam, core tower, NPC waves
