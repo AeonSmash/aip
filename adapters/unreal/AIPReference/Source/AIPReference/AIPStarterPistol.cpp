@@ -1,7 +1,9 @@
 #include "AIPStarterPistol.h"
 
-#include "AIPInvader.h"
+#include "AIPPistolSlugProjectile.h"
+#include "AIPSfx.h"
 #include "Engine/World.h"
+#include "GameFramework/Pawn.h"
 
 AAIPStarterPistol::AAIPStarterPistol()
 {
@@ -27,7 +29,6 @@ void AAIPStarterPistol::StartFire()
 	{
 		return;
 	}
-	LastFireTime = Now;
 
 	FVector Start;
 	FVector End;
@@ -36,16 +37,30 @@ void AAIPStarterPistol::StartFire()
 		return;
 	}
 
-	FHitResult Hit;
-	const bool bHit = LineTrace(Range, Hit);
-	const FVector BeamEnd = bHit ? Hit.ImpactPoint : End;
-	DrawBeam(Start, BeamEnd, FColor(220, 180, 80), 0.08f, 1.1f);
-
-	if (bHit)
+	const FVector Direction = (End - Start).GetSafeNormal();
+	if (Direction.IsNearlyZero())
 	{
-		if (AAIPInvader* Invader = Cast<AAIPInvader>(Hit.GetActor()))
-		{
-			Invader->ReceiveWeaponDamage(Damage, GetOwner());
-		}
+		return;
 	}
+
+	FActorSpawnParameters Params;
+	Params.Owner = GetOwner();
+	Params.Instigator = Cast<APawn>(GetOwner());
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	const FVector SpawnLoc = Start + Direction * MuzzleOffset;
+	AAIPPistolSlugProjectile* Shot = World->SpawnActor<AAIPPistolSlugProjectile>(
+		AAIPPistolSlugProjectile::StaticClass(),
+		SpawnLoc,
+		Direction.Rotation(),
+		Params);
+
+	if (!Shot)
+	{
+		return;
+	}
+
+	LastFireTime = Now;
+	Shot->InitShot(Direction, Damage, GetOwner(), Range);
+	AIPSfx::Play(this, TEXT("pistol"), 0.42f);
 }

@@ -1,6 +1,8 @@
 #include "AIPLinkBeamWeapon.h"
 
 #include "AIPLinkSphereProjectile.h"
+#include "AIPSfx.h"
+#include "Components/AudioComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Pawn.h"
 
@@ -9,6 +11,11 @@ AAIPLinkBeamWeapon::AAIPLinkBeamWeapon()
 	ViewScale = FVector(0.42f, 0.1f, 0.1f);
 	ViewOffset = FVector(40.f, 18.f, -14.f);
 	bUnlocked = false;
+
+	LinkHum = CreateDefaultSubobject<UAudioComponent>(TEXT("LinkHum"));
+	LinkHum->SetupAttachment(ViewMesh);
+	LinkHum->bAutoActivate = false;
+	LinkHum->bIsUISound = true;
 }
 
 void AAIPLinkBeamWeapon::SetUnlocked(bool bInUnlocked)
@@ -25,7 +32,31 @@ void AAIPLinkBeamWeapon::StartFire()
 void AAIPLinkBeamWeapon::StartAltFire()
 {
 	Super::StartAltFire();
+	StartLinkHum();
 	TryLaunch(true);
+}
+
+void AAIPLinkBeamWeapon::StopAltFire()
+{
+	Super::StopAltFire();
+	StopLinkHum();
+}
+
+void AAIPLinkBeamWeapon::StartLinkHum()
+{
+	if (!bEquipped || !bUnlocked)
+	{
+		return;
+	}
+	AIPSfx::PlayLoop(this, LinkHum, TEXT("linkbeam_link"), 0.28f);
+}
+
+void AAIPLinkBeamWeapon::StopLinkHum()
+{
+	if (LinkHum)
+	{
+		LinkHum->Stop();
+	}
 }
 
 void AAIPLinkBeamWeapon::Tick(float DeltaTime)
@@ -34,7 +65,13 @@ void AAIPLinkBeamWeapon::Tick(float DeltaTime)
 
 	if (!bEquipped || !bUnlocked)
 	{
+		StopLinkHum();
 		return;
+	}
+
+	if (bAltFiring && LinkHum && !LinkHum->IsPlaying())
+	{
+		StartLinkHum();
 	}
 
 	PulseTimer -= DeltaTime;
@@ -98,4 +135,8 @@ void AAIPLinkBeamWeapon::TryLaunch(bool bRepair)
 
 	PulseTimer = PulseInterval;
 	Shot->InitShot(Direction, bRepair, DamagePerShot, RepairPerShot, GetOwner(), Range);
+	if (!bRepair)
+	{
+		AIPSfx::Play(this, TEXT("linkbeam_pulse"), 0.48f);
+	}
 }

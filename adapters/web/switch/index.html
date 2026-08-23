@@ -269,8 +269,7 @@
         return window.AIP_BOARD_URL.replace(/\/$/, "");
       }
       if (location.port === "8788") return location.origin;
-      if (location.protocol === "https:") return "";
-      return "http://127.0.0.1:8788";
+      return "https://arkavia-backend.vercel.app/aip/board";
     }
 
     function makeBreakerEnvelope() {
@@ -376,11 +375,7 @@
         return;
       }
       statusEl.textContent = "BOARD UNREACHABLE";
-      if (result.reason === "no-board") {
-        hintEl.textContent = "HTTPS cannot POST to localhost. Open this CRT from http://127.0.0.1:8788/switch (npm run board) or pass ?board=https://your-board";
-      } else {
-        hintEl.textContent = "Start the envelope board on :8788 (grants/decentraland: npm run board). Unreal polls GET /latest.";
-      }
+      hintEl.textContent = "Could not reach https://arkavia-backend.vercel.app/aip/board";
     }
 
     function pull() {

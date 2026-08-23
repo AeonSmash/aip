@@ -134,6 +134,7 @@ protected:
 
 	int32 EquippedWeaponIndex = 0;
 	bool bLinkBeamUnlocked = false;
+	float FootstepTimer = 0.f;
 
 public:
 	UFUNCTION(BlueprintPure, Category = "AIP|Weapon")
@@ -145,6 +146,7 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	
 
 public:

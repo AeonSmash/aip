@@ -9,6 +9,82 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.8] - 2026-08-23
+
+ElevenLabs sound-generation clips in the demo. Envelope schema remains **0.1**.
+
+### Added
+
+- `grants/.env` `ELEVENLABS_API_KEY` for `sound_generation` (not committed)
+
+### Changed
+
+- Demo SFX regenerated via ElevenLabs (`pistol`, `linkbeam_pulse`,
+  `linkbeam_link`, `footstep`, `terminal_rhodes`)
+- `@aeonsmash/aip` **0.5.5 → 0.5.8** (aligns SDK with Unreal 0.5.6 pistol
+  slugs and 0.5.7 SFX player)
+- `AIP.uplugin` VersionName **0.5.7 → 0.5.8**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Decentraland scene **0.2.4** plays the same clips as MP3.
+
+## [0.5.7] - 2026-08-23
+
+Shared ElevenLabs SFX for Unreal and Decentraland. Envelope schema remains **0.1**.
+
+### Added
+
+- Runtime WAV player (`UAIPSfxSubsystem`) loading `Content/AIP/Audio/*.wav`
+- Pistol fire, LinkBeam pulse, LinkBeam RMB loop, footsteps, Rhodes terminal sting
+- `adapters/audio/generate-sfx.mjs` — ElevenLabs if the key has
+  `sound_generation`, otherwise a local analog/Rhodes synth
+
+### Changed
+
+- `AIP.uplugin` VersionName **0.5.6 → 0.5.7**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Decentraland scene **0.2.3** uses the same clip names as MP3.
+
+## [0.5.6] - 2026-08-23
+
+Starter pistol fires a visible slug instead of a debug line. Envelope schema remains **0.1**.
+
+### Added
+
+- `AAIPPistolSlugProjectile` — small brass cylinder, faster than LinkBeam orbs,
+  with a slight gravity drop
+
+### Changed
+
+- Starter pistol LMB: discrete slug at 0.22s instead of a yellow debug trace
+- `AIP.uplugin` VersionName **0.5.5 → 0.5.6**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- LinkBeam spheres are unchanged (green, larger, no gravity, 0.5s volley).
+
+## [0.5.5] - 2026-08-22
+
+Public CRT on aeonsmash.com can complete the loop. Envelope schema remains **0.1**.
+
+### Changed
+
+- Unreal default `AIP.BoardUrl` is
+  `https://arkavia-backend.vercel.app/aip/board` (same bus as DCL and the
+  website). Local `:8788` remains optional via CVar.
+- `@aeonsmash/aip` and `AIP.uplugin` VersionName **0.5.4 → 0.5.5**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Requires Arkavia **1.26.0** (`GET/POST /aip/board/*`) and Epoch-Website **1.9.5**.
+
 ## [0.5.4] - 2026-08-22
 
 Plaque and terminal copy for the three-world loop. Envelope schema remains **0.1**.

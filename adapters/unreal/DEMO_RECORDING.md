@@ -15,7 +15,7 @@ Second terminal: `npm start` (DCL preview). Open Unreal `AIPReference.uproject` 
 
 | Time | Picture | What to show |
 | --- | --- | --- |
-| 0:00 | HUD | Core HP, countdown, gun=Pistol; no terminal cube |
+| 0:00 | HUD | Core HP, countdown, gun=Pistol; brass slugs; no terminal cube |
 | 0:05 | DCL Box 1 | Click; Unreal terminal appears |
 | 0:15 | Terminal | Walk to cube, press E (posts signal.terminal) |
 | 0:22 | DCL plaque | Breaker request; click opens CRT |

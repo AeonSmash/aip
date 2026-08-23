@@ -2,6 +2,7 @@
 
 #include "AIPBlueprintLibrary.h"
 #include "AIPPlayerUpgradeComponent.h"
+#include "AIPSfx.h"
 #include "AIPTerminal.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
@@ -14,7 +15,7 @@
 
 TAutoConsoleVariable<FString> CVarAIPBoardUrl(
 	TEXT("AIP.BoardUrl"),
-	TEXT("http://127.0.0.1:8788"),
+	TEXT("https://arkavia-backend.vercel.app/aip/board"),
 	TEXT("AIP envelope board base URL"),
 	ECVF_Default);
 
@@ -133,6 +134,7 @@ void UAIPBoardSubsystem::RevealTerminal()
 	{
 		It->SetRevealed(true);
 		bTerminalRevealed = true;
+		AIPSfx::Play(World, TEXT("linkbeam_pulse"), 0.4f);
 		UE_LOG(LogTemp, Log, TEXT("AIP: revealed terminal from signal.box"));
 		return;
 	}

@@ -4,7 +4,7 @@
 #include "AIPWeapon.h"
 #include "AIPStarterPistol.generated.h"
 
-/** Weak starter hitscan. No core repair. Replaced as the prize by LinkBeam. */
+/** Weak starter pistol. Fires small brass slugs. No core repair. */
 UCLASS()
 class AIPREFERENCE_API AAIPStarterPistol : public AAIPWeapon
 {
@@ -25,6 +25,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
 	float Cooldown = 0.22f;
+
+	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
+	float MuzzleOffset = 70.f;
 
 	float LastFireTime = -1000.f;
 };

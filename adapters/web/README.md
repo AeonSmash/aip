@@ -2,23 +2,19 @@
 
 A public CRT breaker. Pulling the lever is a **source-world event**. It does not name Unreal guns. A destination (the Unreal FPS reference) may interpret `signal.breaker` as unlocking a local LinkBeam.
 
-## Local demo (three-window loop)
-
-With the envelope board running (`grants/decentraland`: `npm run board`):
-
-**http://127.0.0.1:8788/switch**
-
-Pull once. The page POSTs a **new** timestamped `signal.breaker` (`X-AIP-Write-Key: web-demo`). Unreal polls `GET /latest` and maps that event. No player JSON download.
-
-`aip switch serve` still hosts this HTML on :8787; the page posts to :8788, not to inbox `/pull`.
-
-## Public page (aeonsmash.com)
+## Public demo (aeonsmash.com)
 
 https://aeonsmash.com/#aip-switch
 
-Same POST. A page served over HTTPS cannot reach `http://127.0.0.1:8788` (mixed content). Point it at a hosted board with `?board=` or `VITE_AIP_BOARD_URL`. Until that exists, use the local CRT above.
+Pull once. The page POSTs a new timestamped `signal.breaker` to
+`https://arkavia-backend.vercel.app/aip/board` (`X-AIP-Write-Key: web-demo`).
+Unreal polls that same HTTPS board and maps the event to LinkBeam. No player JSON download.
 
-Static example copy (not “already pulled”): https://aeonsmash.com/aip/main-breaker.aip.json
+DCL plaque opens this URL after Unreal **E**.
+
+## Local CRT
+
+**http://127.0.0.1:8788/switch** (when `npm run board` is running) still posts to the local board, or to the hosted board if opened from another origin.
 
 ## Non-goals
 

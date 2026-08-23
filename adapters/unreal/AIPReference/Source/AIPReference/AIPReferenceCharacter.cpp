@@ -4,6 +4,7 @@
 #include "AIPBlueprintLibrary.h"
 #include "AIPBoardSubsystem.h"
 #include "AIPPlayerUpgradeComponent.h"
+#include "AIPSfx.h"
 #include "AIPSovereigntyWidget.h"
 #include "AIPTerminal.h"
 #include "AIPLinkBeamWeapon.h"
@@ -154,6 +155,7 @@ void AAIPReferenceCharacter::OnAipInteract()
 		Terminal->PromptText->SetText(FText::FromString(Status));
 	}
 	UE_LOG(LogTemp, Log, TEXT("AIP Interact: %s"), *Status);
+	AIPSfx::Play(this, TEXT("terminal_rhodes"), 0.55f);
 
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
@@ -262,6 +264,25 @@ FString AAIPReferenceCharacter::GetEquippedWeaponName() const
 		return Weapon->GetWeaponDisplayName();
 	}
 	return TEXT("Pistol");
+}
+
+void AAIPReferenceCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	FootstepTimer -= DeltaTime;
+	const UCharacterMovementComponent* Move = GetCharacterMovement();
+	if (!Move || !Move->IsMovingOnGround() || Move->Velocity.Size2D() < 120.f)
+	{
+		return;
+	}
+	if (FootstepTimer > 0.f)
+	{
+		return;
+	}
+
+	FootstepTimer = 0.34f;
+	AIPSfx::Play(this, TEXT("footstep"), 0.22f);
 }
 
 void AAIPReferenceCharacter::OnFirePressed()

@@ -16,6 +16,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void StartFire() override;
 	virtual void StartAltFire() override;
+	virtual void StopAltFire() override;
 	virtual FString GetWeaponDisplayName() const override { return TEXT("LinkBeam"); }
 
 	UFUNCTION(BlueprintCallable, Category = "AIP|Weapon")
@@ -41,6 +42,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
 	float MuzzleOffset = 88.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AIP|Weapon")
+	TObjectPtr<class UAudioComponent> LinkHum;
+
+	void StartLinkHum();
+	void StopLinkHum();
 
 	float PulseTimer = 0.f;
 	bool bUnlocked = false;
