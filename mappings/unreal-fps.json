@@ -28,8 +28,7 @@
     },
     {
       "match": {
-        "type": "signal.breaker",
-        "powerTier": ["high", "exceptional"]
+        "type": "signal.breaker"
       },
       "interpretation": {
         "principle": "destination-sovereignty",

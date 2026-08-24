@@ -6,7 +6,8 @@
 #include "AIPBoardSubsystem.generated.h"
 
 /**
- * Polls the AIP envelope board. Reveals the terminal on signal.box,
+ * Polls the AIP envelope board. Reveals the terminal on a live signal.box
+ * (envelopes issued before this play session are ignored),
  * unlocks LinkBeam on signal.breaker. E posts signal.terminal.
  */
 UCLASS()
@@ -31,10 +32,13 @@ protected:
 	void PostTerminalEnvelope();
 	void HandleLatestPayload(const FString& Json, int32 ResponseCode, bool bSucceeded);
 	void HandlePostResult(int32 ResponseCode, bool bSucceeded);
+	bool IsLiveForThisPlay(const FAIPEnvelope& Envelope) const;
 
 	float PollTimer = 0.f;
 	bool bTerminalRevealed = false;
 	bool bBreakerApplied = false;
 	bool bTerminalPosted = false;
 	bool bPollInFlight = false;
+	FDateTime PlayStartedUtc;
+	TSet<FString> SeenEnvelopeIds;
 };

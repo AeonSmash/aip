@@ -274,7 +274,7 @@
 
     function makeBreakerEnvelope() {
       const issuedAt = new Date().toISOString();
-      const stamp = issuedAt.replace(/[^0-9]/g, "").slice(0, 14);
+      const stamp = issuedAt.replace(/[^0-9]/g, "") + "-" + Math.random().toString(36).slice(2, 8);
       return {
         aip: "0.1",
         kind: "event",

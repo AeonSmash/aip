@@ -25,18 +25,19 @@ export async function postEnvelope(envelope: AipEnvelope): Promise<boolean> {
   }
 }
 
-export async function fetchLatest(): Promise<AipEnvelope[]> {
+/** Null means the poll failed. Empty array means the board is actually empty. */
+export async function fetchLatest(): Promise<AipEnvelope[] | null> {
   if (!BOARD_URL) {
-    return []
+    return null
   }
   try {
     const res = await fetch(`${BOARD_URL}/latest?session=${SESSION}`)
     if (!res.ok) {
-      return []
+      return null
     }
     const body = (await res.json()) as BoardSnapshot
     return Array.isArray(body.envelopes) ? body.envelopes : []
   } catch {
-    return []
+    return null
   }
 }

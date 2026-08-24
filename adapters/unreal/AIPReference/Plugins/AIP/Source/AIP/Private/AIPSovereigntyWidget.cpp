@@ -4,6 +4,10 @@
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/TextBlock.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
+#include "Framework/Text/TextLayout.h"
+#include "Widgets/Layout/Anchors.h"
 
 void UAIPSovereigntyWidget::NativeConstruct()
 {
@@ -41,6 +45,24 @@ void UAIPSovereigntyWidget::NativeConstruct()
 			Font.Size = 18;
 			ArenaText->SetFont(Font);
 		}
+		AwardText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Award"));
+		if (Root && AwardText)
+		{
+			UCanvasPanelSlot* AwardSlot = Root->AddChildToCanvas(AwardText);
+			if (AwardSlot)
+			{
+				AwardSlot->SetAnchors(FAnchors(0.5f, 0.42f, 0.5f, 0.42f));
+				AwardSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+				AwardSlot->SetAutoSize(true);
+				AwardSlot->SetPosition(FVector2D(0.f, 0.f));
+			}
+			AwardText->SetJustification(ETextJustify::Center);
+			AwardText->SetColorAndOpacity(FSlateColor(FLinearColor(0.95f, 0.78f, 0.22f, 1.f)));
+			FSlateFontInfo Font = AwardText->GetFont();
+			Font.Size = 72;
+			AwardText->SetFont(Font);
+			AwardText->SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 	else if (SummaryText)
 	{
@@ -67,5 +89,27 @@ void UAIPSovereigntyWidget::SetSummary(const FString& Summary)
 	if (RuntimeText)
 	{
 		RuntimeText->SetText(FText::FromString(Summary));
+	}
+}
+
+void UAIPSovereigntyWidget::ShowAward(const FString& Line)
+{
+	if (AwardText)
+	{
+		AwardText->SetText(FText::FromString(Line));
+		AwardText->SetVisibility(ESlateVisibility::HitTestInvisible);
+	}
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(AwardTimer);
+		World->GetTimerManager().SetTimer(AwardTimer, this, &UAIPSovereigntyWidget::ClearAward, 4.5f, false);
+	}
+}
+
+void UAIPSovereigntyWidget::ClearAward()
+{
+	if (AwardText)
+	{
+		AwardText->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }

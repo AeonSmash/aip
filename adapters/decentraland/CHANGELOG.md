@@ -2,6 +2,23 @@
 
 Scene-only versioning. Envelope schema remains **0.1**.
 
+## [0.2.6] — 2026-08-23
+
+### Changed
+
+- Box 1 envelope ids include milliseconds so each click is unique. The hosted
+  board (Arkavia **1.27.1**) replaces a leftover `signal.box` instead of
+  returning `duplicate: true`.
+
+## [0.2.5] — 2026-08-23
+
+### Fixed
+
+- Switch plaque no longer appears from a leftover `signal.terminal` on the
+  shared `demo` board. The scene baselines envelope ids on the first successful
+  poll and only shows the plaque for a **new** Unreal terminal click after the
+  scene starts.
+
 ## [0.2.4] — 2026-08-23
 
 ### Changed

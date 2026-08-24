@@ -296,6 +296,10 @@ void AAIPReferenceCharacter::Tick(float DeltaTime)
 	}
 
 	FootstepTimer -= DeltaTime;
+	if (!bLinkBeamUnlocked && AIPUpgrade && AIPUpgrade->HasLinkBeamUnlock())
+	{
+		OnAipMappingApplied(AIPUpgrade->LastEnvelope, AIPUpgrade->LastMapping);
+	}
 	const UCharacterMovementComponent* Move = GetCharacterMovement();
 	if (!Move || !Move->IsMovingOnGround() || Move->Velocity.Size2D() < 120.f)
 	{
@@ -367,15 +371,30 @@ void AAIPReferenceCharacter::OnPrevWeapon()
 
 void AAIPReferenceCharacter::OnAipMappingApplied(const FAIPEnvelope& Envelope, const FAIPMappedInterpretation& Mapping)
 {
-	if (AIPUpgrade && AIPUpgrade->HasLinkBeamUnlock())
+	if (bLinkBeamUnlocked || !(AIPUpgrade && AIPUpgrade->HasLinkBeamUnlock()))
 	{
-		bLinkBeamUnlocked = true;
-		if (LinkBeam)
+		return;
+	}
+
+	bLinkBeamUnlocked = true;
+	if (LinkBeam)
+	{
+		LinkBeam->SetUnlocked(true);
+	}
+	EquipWeaponIndex(1);
+	UE_LOG(LogAIPReference, Log, TEXT("AIP unlocked LinkBeam from %s"), *Envelope.Label);
+	AIPSfx::Play(this, TEXT("linkbeam_pulse"), 0.7f);
+
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		for (TObjectIterator<UAIPSovereigntyWidget> It; It; ++It)
 		{
-			LinkBeam->SetUnlocked(true);
+			if (It->GetOwningPlayer() == PC)
+			{
+				It->ShowAward(TEXT("LINKGUN AWARDED"));
+				It->SetSummary(AIPUpgrade->GetHudSummary());
+			}
 		}
-		EquipWeaponIndex(1);
-		UE_LOG(LogAIPReference, Log, TEXT("AIP unlocked LinkBeam from %s"), *Envelope.Label);
 	}
 }
 

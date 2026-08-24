@@ -41,6 +41,7 @@ void UAIPBoardSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	PollTimer = 0.f;
+	PlayStartedUtc = FDateTime::UtcNow();
 }
 
 TStatId UAIPBoardSubsystem::GetStatId() const
@@ -112,6 +113,22 @@ void UAIPBoardSubsystem::HandleEnvelopes(const TArray<FAIPEnvelope>& Envelopes)
 {
 	for (const FAIPEnvelope& Env : Envelopes)
 	{
+		if (Env.Id.IsEmpty())
+		{
+			continue;
+		}
+
+		const bool bLive = IsLiveForThisPlay(Env);
+		if (!bLive)
+		{
+			if (!SeenEnvelopeIds.Contains(Env.Id))
+			{
+				UE_LOG(LogTemp, Log, TEXT("AIP: ignoring leftover %s id=%s issuedAt=%s"), *Env.Type, *Env.Id, *Env.Source.IssuedAt);
+			}
+			SeenEnvelopeIds.Add(Env.Id);
+			continue;
+		}
+
 		if (Env.Type == TEXT("signal.box") && !bTerminalRevealed)
 		{
 			RevealTerminal();
@@ -119,8 +136,47 @@ void UAIPBoardSubsystem::HandleEnvelopes(const TArray<FAIPEnvelope>& Envelopes)
 		if (Env.Type == TEXT("signal.breaker") && !bBreakerApplied)
 		{
 			ApplyBreaker(Env);
+			if (!bBreakerApplied)
+			{
+				continue;
+			}
+		}
+		SeenEnvelopeIds.Add(Env.Id);
+	}
+}
+
+bool UAIPBoardSubsystem::IsLiveForThisPlay(const FAIPEnvelope& Envelope) const
+{
+	FDateTime Issued;
+	FString Raw = Envelope.Source.IssuedAt.TrimStartAndEnd();
+	if (Raw.IsEmpty())
+	{
+		return false;
+	}
+
+	if (!FDateTime::ParseIso8601(*Raw, Issued))
+	{
+		int32 DotIndex = INDEX_NONE;
+		if (Raw.FindChar(TEXT('.'), DotIndex))
+		{
+			FString Head = Raw.Left(DotIndex);
+			if (Raw.EndsWith(TEXT("Z")))
+			{
+				Head += TEXT("Z");
+			}
+			if (!FDateTime::ParseIso8601(*Head, Issued))
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
 		}
 	}
+
+	const FDateTime Cutoff = PlayStartedUtc - FTimespan::FromSeconds(2.0);
+	return Issued >= Cutoff;
 }
 
 void UAIPBoardSubsystem::RevealTerminal()
@@ -166,16 +222,21 @@ void UAIPBoardSubsystem::ApplyBreaker(const FAIPEnvelope& Envelope)
 
 	FAIPMappedInterpretation Mapped;
 	FString Error;
-	if (!UAIPBlueprintLibrary::MapEnvelopeForUnrealFps(Envelope, Mapped, Error))
+	const bool bMapped = UAIPBlueprintLibrary::MapEnvelopeForUnrealFps(Envelope, Mapped, Error);
+	if (!bMapped || Mapped.Upgrade != TEXT("unlock-linkbeam"))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AIP breaker map failed: %s"), *Error);
-		return;
-	}
-
-	if (Mapped.Upgrade != TEXT("unlock-linkbeam"))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AIP breaker mapped to %s (expected unlock-linkbeam)"), *Mapped.Upgrade);
-		return;
+		if (Envelope.Type != TEXT("signal.breaker"))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AIP breaker map failed: %s"), bMapped ? *Mapped.Upgrade : *Error);
+			return;
+		}
+		Mapped.Upgrade = TEXT("unlock-linkbeam");
+		Mapped.LocalType = TEXT("weapon.linkbeam");
+		Mapped.LocalActor = TEXT("AIP_LinkBeam");
+		Mapped.SourceType = Envelope.Type;
+		Mapped.SourceLabel = Envelope.Label;
+		Mapped.SourceWorld = Envelope.Source.World;
+		UE_LOG(LogTemp, Log, TEXT("AIP: signal.breaker fallback unlock (map=%s)"), bMapped ? *Mapped.Upgrade : *Error);
 	}
 
 	APlayerController* PC = World->GetFirstPlayerController();
@@ -183,6 +244,7 @@ void UAIPBoardSubsystem::ApplyBreaker(const FAIPEnvelope& Envelope)
 	UAIPPlayerUpgradeComponent* Upgrade = Pawn ? Pawn->FindComponentByClass<UAIPPlayerUpgradeComponent>() : nullptr;
 	if (!Upgrade)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("AIP: signal.breaker waiting for pawn upgrade component"));
 		return;
 	}
 

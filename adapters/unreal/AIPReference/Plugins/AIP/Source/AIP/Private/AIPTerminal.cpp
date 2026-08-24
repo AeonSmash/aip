@@ -43,6 +43,8 @@ AAIPTerminal::AAIPTerminal()
 	PromptText->SetText(FText::FromString(TEXT("AIP Terminal\n[E] Signal other worlds\n[F] Export sigil")));
 	PromptText->SetWorldSize(28.f);
 	bRevealed = false;
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
 }
 
 void AAIPTerminal::BeginPlay()
@@ -58,9 +60,21 @@ void AAIPTerminal::SetRevealed(bool bInRevealed)
 	bRevealed = bInRevealed;
 	SetActorHiddenInGame(!bRevealed);
 	SetActorEnableCollision(bRevealed);
+	if (Pedestal)
+	{
+		Pedestal->SetHiddenInGame(!bRevealed);
+		Pedestal->SetVisibility(bRevealed);
+		Pedestal->SetCollisionEnabled(bRevealed ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
+	}
+	if (InteractVolume)
+	{
+		InteractVolume->SetCollisionEnabled(bRevealed ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+		InteractVolume->SetGenerateOverlapEvents(bRevealed);
+	}
 	if (PromptText)
 	{
 		PromptText->SetHiddenInGame(!bRevealed);
+		PromptText->SetVisibility(bRevealed);
 	}
 }
 

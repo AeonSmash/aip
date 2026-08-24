@@ -19,8 +19,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AIP")
 	void SetArenaStatus(const FString& Status);
 
+	UFUNCTION(BlueprintCallable, Category = "AIP")
+	void ShowAward(const FString& Line);
+
 protected:
 	virtual void NativeConstruct() override;
+
+	UFUNCTION()
+	void ClearAward();
 
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> SummaryText;
@@ -30,6 +36,11 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UTextBlock> ArenaText;
+
+	UPROPERTY()
+	TObjectPtr<UTextBlock> AwardText;
+
+	FTimerHandle AwardTimer;
 
 	FString CachedSummary = TEXT("AIP: awaiting envelope");
 	FString CachedArena = TEXT("arena: waiting");

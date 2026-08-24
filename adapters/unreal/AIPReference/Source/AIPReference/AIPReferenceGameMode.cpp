@@ -52,7 +52,6 @@ void AAIPReferenceGameMode::EnsureArenaActors()
 	{
 		bTerminal = true;
 		It->SetRevealed(false);
-		break;
 	}
 	if (!bTerminal)
 	{

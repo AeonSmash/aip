@@ -1,6 +1,7 @@
 /**
  * AIP envelope board — demo bus for DCL, Unreal, and the CRT switch.
- * Not user accounts. Write keys stamp source.world. One envelope type per session.
+ * Not user accounts. Write keys stamp source.world. One current envelope per type;
+ * a later POST of the same type replaces it.
  *
  *   POST /envelopes?session=demo   header X-AIP-Write-Key
  *   GET  /latest?session=demo
@@ -60,10 +61,7 @@ function envelopesOf(session) {
 
 function stampEnvelope(raw, identity) {
   const issuedAt = new Date().toISOString()
-  const id =
-    typeof raw.id === 'string' && raw.id.length >= 8
-      ? raw.id
-      : `aip:${identity.world}:${identity.type}:${issuedAt.replace(/[^0-9]/g, '').slice(0, 14)}`
+  const id = `aip:${identity.world}:${identity.type}:${issuedAt.replace(/[^0-9]/g, '')}-${Math.random().toString(36).slice(2, 8)}`
   return {
     aip: '0.1',
     kind: 'event',
@@ -155,13 +153,10 @@ const server = http.createServer((req, res) => {
           sessions.set(session, new Map())
         }
         const byType = sessions.get(session)
-        if (byType.has(stamped.type)) {
-          json(res, 200, { ok: true, duplicate: true, envelope: byType.get(stamped.type) })
-          return
-        }
+        const replaced = byType.has(stamped.type)
         byType.set(stamped.type, stamped)
-        console.log(`[${session}] ${stamped.type} ← ${stamped.source.world}`)
-        json(res, 200, { ok: true, envelope: stamped })
+        console.log(`[${session}] ${stamped.type} ← ${stamped.source.world}${replaced ? ' (replaced)' : ''}`)
+        json(res, 200, { ok: true, replaced, envelope: stamped })
       } catch {
         json(res, 400, { error: 'bad json' })
       }

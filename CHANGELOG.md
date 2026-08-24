@@ -9,6 +9,100 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.14] - 2026-08-24
+
+Web switch pull awards the LinkGun and shows it on screen. Envelope schema remains **0.1**.
+
+### Fixed
+
+- `signal.breaker` unlock no longer depends on a mapping-file power-tier hit.
+  Unreal applies a type-based LinkGun unlock and retries until the pawn is ready.
+- Award is announced in large HUD text: **LINKGUN AWARDED**. The gun is equipped
+  immediately (key **2** / mouse wheel still work).
+
+### Changed
+
+- `AIP.uplugin` VersionName **0.5.13 → 0.5.14**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- A leftover `signal.breaker` on the hosted board still needs Arkavia **1.27.1**
+  so a new pull replaces the envelope. Then Play Unreal and pull the switch again.
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- A leftover `signal.breaker` on the hosted board still needs Arkavia **1.27.1**
+  so a new pull replaces the envelope. Then Play Unreal and pull the switch again.
+
+## [0.5.13] - 2026-08-23
+
+A live Box 1 click reveals the Unreal terminal even when the shared board already had `signal.box`. Envelope schema remains **0.1**.
+
+### Fixed
+
+- Hosted board "one type per session" returned `duplicate: true` on a second Box 1
+  click, so Unreal (which ignores leftovers) never saw a new envelope. Re-posts now
+  replace the stored envelope (Arkavia **1.27.1**). Unreal treats envelopes by
+  `issuedAt` after play starts instead of swallowing the entire first poll.
+- GameMode again places a **hidden** terminal at BeginPlay so reveal is an unhide
+  at a known mid-field location.
+
+### Changed
+
+- `AIP.uplugin` VersionName **0.5.11 → 0.5.12**
+- Decentraland Box 1 scene **0.2.5 → 0.2.6**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Requires Arkavia backend **1.27.1** on the hosted board URL.
+
+## [0.5.12] - 2026-08-23
+
+Decentraland waits for a live Unreal `signal.terminal` before showing the switch plaque. Envelope schema remains **0.1**.
+
+### Fixed
+
+- Hosted board persist left a previous `signal.terminal` on the shared `demo`
+  session, so the DCL switch plaque appeared as soon as the scene loaded.
+  The scene now baselines existing envelope ids and only shows the plaque on a
+  **new** `signal.terminal` after the scene starts.
+
+### Changed
+
+- Decentraland Box 1 scene **0.2.4 → 0.2.5**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Operator loop: Play Unreal, click Box 1 in DCL, then **E** at the Unreal
+  terminal. The DCL plaque appears after that click, not from leftover board
+  state.
+
+## [0.5.11] - 2026-08-23
+
+Unreal waits for a live Decentraland `signal.box` before showing the AIP terminal. Envelope schema remains **0.1**.
+
+### Fixed
+
+- Hosted board persist left a previous `signal.box` on the shared `demo`
+  session, so PIE revealed the terminal on the first poll. Unreal now
+  baselines existing envelope ids and only reveals on a **new** `signal.box`
+  after play starts. Leftover `signal.breaker` is ignored the same way.
+- GameMode no longer spawns a visible terminal at BeginPlay. The actor appears
+  when a live `signal.box` arrives (or stays hidden if already placed).
+
+### Changed
+
+- `AIP.uplugin` VersionName **0.5.10 → 0.5.11**
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Operator loop: Play Unreal first, then click Box 1 in Decentraland.
+
 ## [0.5.10] - 2026-08-23
 
 First-person viewmodels use the Blender gun FBX files. Envelope schema remains **0.1**.

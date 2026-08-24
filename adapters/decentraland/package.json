@@ -1,6 +1,6 @@
 {
   "name": "aip-decentraland",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "description": "AIP Decentraland reference — Box 1 source world and terminal-event destination",
   "private": true,
   "license": "MIT",

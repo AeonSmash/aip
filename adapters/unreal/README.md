@@ -16,10 +16,10 @@ Inbox file drop remains as an operator fallback. The live three-window loop does
 
 ## Operator loop
 
-1. Play Unreal (`Lvl_FirstPerson`) — polls `https://arkavia-backend.vercel.app/aip/board`
-2. DCL preview: click **Box 1** → terminal appears in Unreal
+1. Play Unreal (`Lvl_FirstPerson`) — polls `https://arkavia-backend.vercel.app/aip/board`. Leftover envelopes from before this play session stay ignored.
+2. DCL preview: click **Box 1** *after* Unreal is playing → terminal appears in Unreal (a re-click replaces the leftover `signal.box` on the board)
 3. Walk up, **E** → DCL plaque appears; click it → https://aeonsmash.com/#aip-switch
-4. Pull the lever on the **public** CRT → Unreal unlocks LinkBeam (keys 1/2)
+4. Pull the lever on the **public** CRT → Unreal unlocks LinkBeam and shows **LINKGUN AWARDED** (keys 1/2)
 
 CVars (defaults): `AIP.BoardUrl=https://arkavia-backend.vercel.app/aip/board`, `AIP.BoardSession=demo`, `AIP.BoardWriteKey=unreal-demo`.
 
@@ -28,7 +28,7 @@ CVars (defaults): `AIP.BoardUrl=https://arkavia-backend.vercel.app/aip/board`, `
 1. Double-click [`AIPReference/AIPReference.uproject`](AIPReference/AIPReference.uproject)
 2. Allow module rebuild if prompted (fully close and reopen the editor after config changes)
 3. Play `Content/FirstPerson/Lvl_FirstPerson`
-4. Core, hidden terminal, and spawn points appear if the map does not already have them
+4. Core and spawn points appear if the map does not already have them. The AIP terminal stays hidden until a live `signal.box`.
 
 Offline inbox without the board (fallback):
 
@@ -47,7 +47,7 @@ Requires Visual Studio 2022 Build Tools (MSVC), Windows SDK, and .NET Framework 
 "C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\Build.bat" AIPReferenceEditor Win64 Development -Project="...\AIPReference.uproject" -WaitMutex
 ```
 
-Verified compile: **Succeeded** (2026-08-22) on UE 5.8.1. Presentation **0.5.10**.
+Verified compile: **Succeeded** (2026-08-22) on UE 5.8.1. Presentation **0.5.14**. Plugin **0.5.14**.
 
 ## Layout
 

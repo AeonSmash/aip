@@ -76,7 +76,7 @@ export function main() {
   Transform.create(plaque, {
     position: Vector3.create(3.2, 1.6, 8),
     rotation: Quaternion.fromEulerDegrees(0, -90, 0),
-    scale: Vector3.create(2.4, 1.5, 1)
+    scale: Vector3.create(0.001, 0.001, 0.001)
   })
   MeshRenderer.setPlane(plaque)
   MeshCollider.setPlane(plaque)
@@ -88,10 +88,11 @@ export function main() {
   const plaqueText = engine.addEntity()
   Transform.create(plaqueText, {
     position: Vector3.create(3.35, 1.6, 8),
-    rotation: Quaternion.fromEulerDegrees(0, -90, 0)
+    rotation: Quaternion.fromEulerDegrees(0, -90, 0),
+    scale: Vector3.create(0.001, 0.001, 0.001)
   })
   TextShape.create(plaqueText, {
-    text: PLAQUE.terminal,
+    text: '',
     fontSize: 1.15,
     textAlign: TextAlignMode.TAM_MIDDLE_CENTER,
     textColor: Color4.create(0.78, 0.97, 0.83, 1),
@@ -113,6 +114,13 @@ export function main() {
     const showPlaque = next === 'terminal'
     VisibilityComponent.getMutable(plaque).visible = showPlaque
     VisibilityComponent.getMutable(plaqueText).visible = showPlaque
+    Transform.getMutable(plaque).scale = showPlaque
+      ? Vector3.create(2.4, 1.5, 1)
+      : Vector3.create(0.001, 0.001, 0.001)
+    Transform.getMutable(plaqueText).scale = showPlaque
+      ? Vector3.create(1, 1, 1)
+      : Vector3.create(0.001, 0.001, 0.001)
+    TextShape.getMutable(plaqueText).text = showPlaque ? PLAQUE.terminal : ''
     if (next === 'terminal') {
       playSfx(SFX.terminal, 0.5)
     }
@@ -154,6 +162,7 @@ export function main() {
   )
 
   let timer = 0
+  let seenIds: Set<string> | null = null
   engine.addSystem((dt) => {
     tickFootsteps(dt)
     timer += dt
@@ -163,9 +172,22 @@ export function main() {
     timer = 0
     executeTask(async () => {
       const envelopes = await fetchLatest()
-      if (envelopes.some(isTerminalSignal)) {
-        setPhase('terminal')
+      if (envelopes === null) {
         return
+      }
+      if (seenIds === null) {
+        seenIds = new Set(envelopes.map((env) => env.id).filter(Boolean))
+        return
+      }
+      for (const env of envelopes) {
+        if (!env.id || seenIds.has(env.id)) {
+          continue
+        }
+        seenIds.add(env.id)
+        if (isTerminalSignal(env)) {
+          setPhase('terminal')
+          return
+        }
       }
       if (posted && phase === 'idle') {
         setPhase('emitted')

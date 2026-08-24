@@ -1,6 +1,6 @@
 # AIP Decentraland reference (Box 1)
 
-SDK7 scene **0.2.4**. This world is a **source** (click Box 1 → `signal.box`) and a **destination** (Unreal `signal.terminal` → in-world breaker request). It does not ship LinkBeam.
+SDK7 scene **0.2.6**. This world is a **source** (click Box 1 → `signal.box`) and a **destination** (Unreal `signal.terminal` → in-world breaker request). It does not ship LinkBeam.
 
 ## Loop
 

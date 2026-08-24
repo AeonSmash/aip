@@ -35,7 +35,7 @@ export function makeBoxEnvelope(discoveredBy: string): AipEnvelope {
   return {
     aip: '0.1',
     kind: 'event',
-    id: `aip:dcl:box-1:${issuedAt.replace(/[^0-9]/g, '').slice(0, 14)}`,
+    id: `aip:dcl:box-1:${issuedAt.replace(/[^0-9]/g, '')}-${Math.random().toString(36).slice(2, 8)}`,
     type: 'signal.box',
     label: 'Box 1',
     source: {
