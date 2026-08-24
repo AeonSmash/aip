@@ -9,6 +9,26 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.15] - 2026-08-24
+
+Public live-loop demo: Decentraland → Unreal → website. Envelope schema remains **0.1**.
+
+### Added
+
+- Recorded three-window operator loop (Box 1, Unreal terminal / LinkBeam, public
+  CRT switch): https://youtu.be/HhmK0dzFoU4
+
+### Changed
+
+- README media lead is the live loop. The 90-second conceptual explainer remains
+  https://youtu.be/3D2cgt-ajlE
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Plugin **0.5.14** and `@aeonsmash/aip` **0.5.9** are unchanged; this is a
+  presentation/media bump.
+
 ## [0.5.14] - 2026-08-24
 
 Web switch pull awards the LinkGun and shows it on screen. Envelope schema remains **0.1**.
@@ -23,12 +43,6 @@ Web switch pull awards the LinkGun and shows it on screen. Envelope schema remai
 ### Changed
 
 - `AIP.uplugin` VersionName **0.5.13 → 0.5.14**
-
-### Notes
-
-- Protocol envelope version is still **0.1**.
-- A leftover `signal.breaker` on the hosted board still needs Arkavia **1.27.1**
-  so a new pull replaces the envelope. Then Play Unreal and pull the switch again.
 
 ### Notes
 

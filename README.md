@@ -2,7 +2,7 @@
 
 An open semantic interoperability protocol for independent games and real-time 3D worlds.
 
-[Explainer video](https://youtu.be/3D2cgt-ajlE) · [Public draft](#public-draft-01)
+[Live loop (DCL → Unreal → web)](https://youtu.be/HhmK0dzFoU4) · [Conceptual explainer](https://youtu.be/3D2cgt-ajlE) · [Public draft](#public-draft-01)
 
 A source world can describe an object, event, or identity. A destination world decides what that description means locally. Worlds do not share a database, engine, economy, or blockchain.
 
@@ -51,7 +51,8 @@ This repository is the public presentation of AIP. It is intentionally small. In
 | [`explainer/index.html`](explainer/index.html) | 90-second visual walkthrough |
 | [`CHANGELOG.md`](CHANGELOG.md) | Public presentation history |
 
-Watch the recorded explainer: https://youtu.be/3D2cgt-ajlE
+Watch the live three-world loop: https://youtu.be/HhmK0dzFoU4  
+Conceptual explainer: https://youtu.be/3D2cgt-ajlE
 
 ### Quick CLI loop
 
@@ -94,13 +95,13 @@ No particular engine or world is a requirement of AIP Core. Unreal, Decentraland
 
 ## Current status
 
-**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.14).**
+**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.15).**
 
 - TypeScript core validates and maps envelopes (`npm test` green); `@aeonsmash/aip` **0.5.9**
 - File exchange contract under `exchange/`
 - Web CRT switch emits `signal.breaker` onto the envelope board; Unreal maps it to LinkBeam
 - Unreal 5.8 First Person reference (PIE): start with pistol, hidden terminal until `signal.box`, AIP-unlocked LinkBeam, core tower, NPC waves
-- Bidirectional demo path: DCL box → Unreal terminal → CRT breaker → Unreal LinkBeam; Unreal sigil → Decentraland museum mapping via CLI
+- Live three-world loop: DCL box → Unreal terminal → public CRT breaker → Unreal LinkBeam ([video](https://youtu.be/HhmK0dzFoU4)); Unreal sigil → Decentraland museum mapping via CLI
 
 Existing AeonSmash work is how the problem was found, not a dependency of the protocol.
 
@@ -116,7 +117,7 @@ AIP does **not** require:
 
 1. Freeze a tiny public envelope and examples *(this repo)*
 2. A real-time 3D adapter / SDK and a small reference level *(Unreal MVP — playable in PIE)*
-3. Bidirectional demonstration between two independent runtimes *(file transport + CLI peer)*
+3. Bidirectional demonstration between two independent runtimes *(live board: DCL ↔ Unreal ↔ web; CLI museum map remains)*
 4. Validation, diagnostics, and conformance fixtures *(TypeScript tests — started)*
 5. Documentation and sample integrations other developers can run
 
