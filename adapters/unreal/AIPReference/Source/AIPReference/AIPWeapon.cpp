@@ -19,6 +19,8 @@ AAIPWeapon::AAIPWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
+	// After the camera and anim update, so the viewmodel does not lag the aim by a frame.
+	PrimaryActorTick.TickGroup = TG_PostUpdateWork;
 
 	ViewMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ViewMesh"));
 	SetRootComponent(ViewMesh);
@@ -66,6 +68,9 @@ void AAIPWeapon::ApplyViewMesh()
 		if (UStaticMesh* Mesh = Cast<UStaticMesh>(ViewMeshAsset.TryLoad()))
 		{
 			ViewMesh->SetStaticMesh(Mesh);
+			const FBox Box = Mesh->GetBoundingBox();
+			// Meshes are authored barrel-on-+X, so the tip is the +X face.
+			MuzzleLocal = FVector(Box.Max.X, Box.GetCenter().Y, Box.GetCenter().Z);
 			const float Size = Mesh->GetBoundingBox().GetSize().GetMax();
 			if (Size > KINDA_SMALL_NUMBER)
 			{
@@ -195,6 +200,25 @@ bool AAIPWeapon::LoadObjViewMesh()
 	Tangents.Init(FProcMeshTangent(1.f, 0.f, 0.f), Verts.Num());
 	Colors.Init(FLinearColor(0.18f, 0.19f, 0.21f, 1.f), Verts.Num());
 
+	// Average the vertices nearest the +X end so the muzzle lands on the barrel
+	// centre line rather than a corner of the bounding box.
+	float MaxX = -BIG_NUMBER;
+	for (const FVector& V : Verts)
+	{
+		MaxX = FMath::Max(MaxX, V.X);
+	}
+	FVector TipSum = FVector::ZeroVector;
+	int32 TipCount = 0;
+	for (const FVector& V : Verts)
+	{
+		if (V.X > MaxX - 1.f)
+		{
+			TipSum += V;
+			++TipCount;
+		}
+	}
+	MuzzleLocal = TipCount > 0 ? TipSum / TipCount : FVector(MaxX, 0.f, 0.f);
+
 	ProcMesh->CreateMeshSection_LinearColor(0, Verts, Tris, Normals, UV, Colors, Tangents, false);
 	ProcMesh->SetHiddenInGame(false);
 
@@ -234,10 +258,56 @@ void AAIPWeapon::StopAltFire()
 void AAIPWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (bEquipped && GetAttachParentActor() == nullptr)
+	if (!bEquipped)
+	{
+		return;
+	}
+	if (GetAttachParentActor() == nullptr)
 	{
 		AttachToOwnerCamera();
 	}
+	RecoilAlpha = FMath::FInterpTo(RecoilAlpha, 0.f, DeltaTime, RecoilRecovery);
+	UpdateViewTransform();
+}
+
+void AAIPWeapon::AddRecoil(float Scale)
+{
+	RecoilAlpha = FMath::Min(1.f, RecoilAlpha + FMath::Max(0.f, Scale));
+}
+
+FVector AAIPWeapon::GetMuzzleWorldLocation() const
+{
+	const USceneComponent* MeshComp = ViewMesh;
+	if (ProcMesh && ProcMesh->GetNumSections() > 0 && !ProcMesh->bHiddenInGame)
+	{
+		MeshComp = ProcMesh;
+	}
+	if (MeshComp && !MuzzleLocal.IsNearlyZero())
+	{
+		return MeshComp->GetComponentTransform().TransformPosition(MuzzleLocal);
+	}
+	return GetActorLocation() + GetActorForwardVector() * 20.f;
+}
+
+void AAIPWeapon::UpdateViewTransform()
+{
+	const ACharacter* Pawn = GetPawnOwner();
+	const APlayerController* PC = Pawn ? Cast<APlayerController>(Pawn->GetController()) : nullptr;
+	if (!PC)
+	{
+		return;
+	}
+
+	FVector ViewLoc;
+	FRotator ViewRot;
+	PC->GetPlayerViewPoint(ViewLoc, ViewRot);
+
+	FVector Offset = ViewOffset;
+	Offset.X -= RecoilKickBack * RecoilAlpha;
+	const FRotator Kick(RecoilKickUp * RecoilAlpha, 0.f, 0.f);
+
+	const FQuat Desired = FQuat(ViewRot) * FQuat(ViewRotation) * FQuat(Kick);
+	SetActorLocationAndRotation(ViewLoc + ViewRot.RotateVector(Offset), Desired);
 }
 
 void AAIPWeapon::AttachToOwnerCamera(USceneComponent* Camera)
@@ -262,22 +332,13 @@ void AAIPWeapon::AttachToOwnerCamera(USceneComponent* Camera)
 		ViewMesh->SetCastShadow(false);
 	}
 
-	AttachToComponent(Anchor, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-
-	// Imported FBX barrel sits on +Y (camera right). Yaw so +Y becomes camera +X (forward).
-	// Applied here — not the constructor — because Live Coding does not refresh CDO defaults.
-	if (ViewRotation.IsNearlyZero())
-	{
-		ViewRotation = FRotator(0.f, -90.f, 0.f);
-	}
-	SetActorRelativeLocation(ViewOffset);
-	SetActorRelativeRotation(ViewRotation);
-	if (RootComponent)
-	{
-		RootComponent->SetRelativeLocationAndRotation(ViewOffset, ViewRotation);
-	}
+	// Attach for lifetime and coarse movement only. The first person camera hangs off the
+	// head bone with a 90/-90 fixup and uses control rotation just for rendering, so
+	// inheriting its transform aims the barrel sideways. Track the view point instead.
+	AttachToComponent(Anchor, FAttachmentTransformRules::KeepWorldTransform);
 	SetActorEnableCollision(false);
-	UE_LOG(LogTemp, Log, TEXT("AIP weapon %s attached to %s rot=%s"), *GetName(), *Anchor->GetName(), *ViewRotation.ToString());
+	UpdateViewTransform();
+	UE_LOG(LogTemp, Log, TEXT("AIP weapon %s tracking view of %s"), *GetName(), *Anchor->GetName());
 }
 
 void AAIPWeapon::SetEquipped(bool bInEquipped)

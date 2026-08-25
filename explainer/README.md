@@ -4,7 +4,7 @@ Local capture: `explainer.mp4` (kept on disk, not in git).
 
 Published conceptual explainer: https://youtu.be/3D2cgt-ajlE
 
-Epic MegaGrants project media is the live three-world loop, not this explainer: https://youtu.be/HhmK0dzFoU4
+Epic MegaGrants project media is the live three-world loop, not this explainer: https://youtu.be/FxUgI1HTrGQ
 
 Open `explainer/index.html` in a browser (Chrome/Edge). Click **Play**. The YouTube video and the captions run together. `file://` sometimes blocks the YouTube API; if the player is blank, use a local server or the site page after deploy (`https://aeonsmash.com/#aip`).
 

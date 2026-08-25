@@ -160,13 +160,19 @@ def extract_mesh(path: Path) -> tuple[list[tuple[float, float, float]], list[tup
     xs = [p[0] for p in points]
     ys = [p[1] for p in points]
     zs = [p[2] for p in points]
-    cx = (min(xs) + max(xs)) * 0.5
-    cy = (min(ys) + max(ys)) * 0.5
-    cz = min(zs)
     size = max(max(xs) - min(xs), max(ys) - min(ys), max(zs) - min(zs), 0.001)
     # First-person viewmodel ~28cm long.
     scale = 28.0 / size
-    points = [((p[0] - cx) * scale, (p[1] - cy) * scale, (p[2] - cz) * scale) for p in points]
+
+    if path.name == "main-SNIPERriffle.fbx":
+        # Grip origin is already at 0. Barrel points -X in the FBX;
+        # Unreal forward is +X, so yaw 180 around Z and scale about the origin.
+        points = [(-p[0] * scale, -p[1] * scale, p[2] * scale) for p in points]
+    else:
+        cx = (min(xs) + max(xs)) * 0.5
+        cy = (min(ys) + max(ys)) * 0.5
+        cz = min(zs)
+        points = [((p[0] - cx) * scale, (p[1] - cy) * scale, (p[2] - cz) * scale) for p in points]
     return points, tris
 
 

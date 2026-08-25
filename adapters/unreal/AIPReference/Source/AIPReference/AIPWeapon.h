@@ -46,6 +46,10 @@ public:
 	UFUNCTION(BlueprintPure, Category = "AIP|Weapon")
 	virtual FString GetWeaponDisplayName() const { return TEXT("Weapon"); }
 
+	/** Barrel tip of the loaded viewmodel, in world space. */
+	UFUNCTION(BlueprintPure, Category = "AIP|Weapon")
+	FVector GetMuzzleWorldLocation() const;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AIP|Weapon")
 	TObjectPtr<UStaticMeshComponent> ViewMesh;
 
@@ -69,17 +73,43 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
 	FString ViewObjFile;
 
+	/** View space: X forward, Y right, Z up. */
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
 	FVector ViewOffset = FVector(42.f, 20.f, -16.f);
 
+	/** Optional tilt on top of the aim direction. Meshes are authored barrel-on-+X. */
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
 	FRotator ViewRotation = FRotator::ZeroRotator;
 
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
 	FVector ViewScale = FVector(0.35f, 0.12f, 0.12f);
 
+	/** How far the viewmodel slides back on a shot, in cm. */
+	UPROPERTY(EditAnywhere, Category = "AIP|Recoil")
+	float RecoilKickBack = 5.f;
+
+	/** How far the muzzle climbs on a shot, in degrees. */
+	UPROPERTY(EditAnywhere, Category = "AIP|Recoil")
+	float RecoilKickUp = 3.f;
+
+	/** Higher settles back to rest faster. */
+	UPROPERTY(EditAnywhere, Category = "AIP|Recoil")
+	float RecoilRecovery = 9.f;
+
 	void ApplyViewMesh();
 	bool LoadObjViewMesh();
+
+	/** Places the viewmodel from the player view point, in view space. */
+	void UpdateViewTransform();
+
+	/** Kicks the viewmodel back and up. Scale 1 is a full shot. */
+	void AddRecoil(float Scale = 1.f);
+
+	/** Barrel tip in viewmodel local space, measured when the mesh loads. */
+	FVector MuzzleLocal = FVector::ZeroVector;
+
+	/** 0 at rest, 1 just after a shot. */
+	float RecoilAlpha = 0.f;
 
 	bool bEquipped = true;
 	bool bFiring = false;

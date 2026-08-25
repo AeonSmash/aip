@@ -26,8 +26,5 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
 	float Cooldown = 0.22f;
 
-	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
-	float MuzzleOffset = 70.f;
-
 	float LastFireTime = -1000.f;
 };

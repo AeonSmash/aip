@@ -9,6 +9,40 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.16] - 2026-08-24
+
+Tighter grant-media cut, and the Unreal viewmodel now aims, kicks, and fires
+from the barrel. Envelope schema remains **0.1**.
+
+### Added
+
+- ElevenLabs `rifle` one-shot at `Content/AIP/Audio/rifle.wav` (starter rifle).
+  `generate-sfx.mjs` accepts clip ids so one cue can regenerate without
+  re-rolling the rest; one-shots are trimmed and peaked under full scale.
+- Sniper textures extracted beside the FBX:
+  `art/weapons/main-SNIPERriffle.fbm/{Baked_BaseColor,normal}.png`. Import the
+  FBX as `LightningGun` to replace the grey OBJ fallback.
+
+### Fixed
+
+- First-person guns track the player view point each frame. Attaching to the
+  head-bone camera left the barrel ~90° off; the old −90° yaw only hid that.
+- Starter rifle and LinkBeam spawn from the mesh muzzle and converge on the
+  crosshair. Both kick back and climb slightly, then settle.
+- Sniper OBJ keeps the grip origin and yaws 180° so the barrel is Unreal +X.
+
+### Changed
+
+- Project media is now https://youtu.be/FxUgI1HTrGQ (replaces
+  https://youtu.be/HhmK0dzFoU4). README and Epic submission drafts follow.
+- Starter rifle plays `rifle` instead of `pistol`.
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Plugin **0.5.14** and `@aeonsmash/aip` **0.5.9** are unchanged. Viewmodel
+  code lives on the AIPReference game module, not the plugin.
+
 ## [0.5.15] - 2026-08-24
 
 Public live-loop demo: Decentraland → Unreal → website. Envelope schema remains **0.1**.

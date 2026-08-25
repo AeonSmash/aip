@@ -40,9 +40,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
 	float PulseInterval = 0.5f;
 
-	UPROPERTY(EditAnywhere, Category = "AIP|Weapon")
-	float MuzzleOffset = 88.f;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AIP|Weapon")
 	TObjectPtr<class UAudioComponent> LinkHum;
 

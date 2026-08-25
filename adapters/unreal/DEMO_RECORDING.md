@@ -25,5 +25,5 @@ Second terminal: `npm start` (DCL preview). Open Unreal `AIPReference.uproject` 
 | 1:05 | F | Outbox write; optional CLI map to Decentraland museum |
 | 1:15 | End card | github.com/AeonSmash/aip |
 
-Live loop (grant media): https://youtu.be/HhmK0dzFoU4  
+Live loop (grant media): https://youtu.be/FxUgI1HTrGQ  
 Conceptual explainer (not the form media): https://youtu.be/3D2cgt-ajlE

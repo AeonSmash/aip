@@ -23,6 +23,14 @@ const dclDir = join(grantsRoot, 'decentraland', 'sounds')
 
 const clips = [
   {
+    id: 'rifle',
+    duration: 0.9,
+    loop: false,
+    influence: 0.5,
+    text:
+      'A single sci-fi sniper rifle shot. Tight percussive crack with a metallic mechanical snap, then a short decaying tail. Powerful but controlled and dry, close mic. No music, no voice, no long reverb, no explosion rumble, no ricochet whine. Video game rifle gunfire one-shot.'
+  },
+  {
     id: 'pistol',
     duration: 0.7,
     loop: false,
@@ -109,6 +117,84 @@ function pcmToWav(pcm, sampleRate = SR, channels = 1, bits = 16) {
   return Buffer.concat([header, pcm])
 }
 
+function readWavPcm(wav) {
+  if (wav.length < 44 || wav.toString('ascii', 0, 4) !== 'RIFF') {
+    return null
+  }
+  let offset = 12
+  let fmt = null
+  while (offset + 8 <= wav.length) {
+    const id = wav.toString('ascii', offset, offset + 4)
+    const size = wav.readUInt32LE(offset + 4)
+    offset += 8
+    if (id === 'fmt ' && size >= 16) {
+      fmt = {
+        channels: wav.readUInt16LE(offset + 2),
+        sampleRate: wav.readUInt32LE(offset + 4),
+        bits: wav.readUInt16LE(offset + 14)
+      }
+    } else if (id === 'data') {
+      if (!fmt || fmt.bits !== 16) {
+        return null
+      }
+      return { ...fmt, pcm: wav.subarray(offset, Math.min(offset + size, wav.length)) }
+    }
+    offset += size + (size & 1)
+  }
+  return null
+}
+
+/**
+ * Generated one-shots come back clipped and padded with room tone. Trim the dead
+ * tail so rapid fire does not smear, and pull the peak under full scale.
+ */
+function tidyOneShot(wav, { peak = 0.89, floorRms = 0.03, tailMs = 60, fadeMs = 6 } = {}) {
+  const parsed = readWavPcm(wav)
+  if (!parsed) {
+    return wav
+  }
+  const { sampleRate, channels, pcm } = parsed
+  const total = Math.floor(pcm.length / 2)
+  if (total < 2) {
+    return wav
+  }
+
+  const samples = new Float64Array(total)
+  let max = 0
+  for (let i = 0; i < total; i++) {
+    samples[i] = pcm.readInt16LE(i * 2) / 32768
+    max = Math.max(max, Math.abs(samples[i]))
+  }
+
+  const win = Math.max(1, Math.floor((sampleRate * channels * 20) / 1000))
+  let end = total
+  for (let start = total - win; start >= 0; start -= win) {
+    let sum = 0
+    for (let i = start; i < start + win && i < total; i++) {
+      sum += samples[i] * samples[i]
+    }
+    if (Math.sqrt(sum / win) > floorRms) {
+      end = Math.min(total, start + win + Math.floor((sampleRate * channels * tailMs) / 1000))
+      break
+    }
+  }
+
+  const gain = max > 0 ? peak / max : 1
+  const fade = Math.max(1, Math.floor((sampleRate * channels * fadeMs) / 1000))
+  const out = Buffer.alloc(end * 2)
+  for (let i = 0; i < end; i++) {
+    let v = samples[i] * gain
+    if (i < fade) {
+      v *= i / fade
+    }
+    if (end - i < fade) {
+      v *= (end - i) / fade
+    }
+    out.writeInt16LE(Math.max(-32767, Math.min(32767, Math.round(v * 32767))), i * 2)
+  }
+  return pcmToWav(out, sampleRate, channels)
+}
+
 function samplesToPcm(samples) {
   const pcm = Buffer.alloc(samples.length * 2)
   for (let i = 0; i < samples.length; i++) {
@@ -131,6 +217,20 @@ function rhodesPartial(t, freq, amp) {
   const tone = Math.sin(2 * Math.PI * freq * t + mod)
   const hammer = Math.sin(2 * Math.PI * freq * 2 * t) * Math.exp(-t * 18) * 0.12
   return amp * (tone + hammer)
+}
+
+function synthRifle(duration) {
+  const n = Math.floor(SR * duration)
+  const out = new Float64Array(n)
+  for (let i = 0; i < n; i++) {
+    const t = i / SR
+    const crack = (Math.random() * 2 - 1) * Math.exp(-t * 90) * 0.42
+    const body = Math.sin(2 * Math.PI * 132 * t) * envExp(t, 0.002, 0.05) * 0.3
+    const snap = Math.sin(2 * Math.PI * 620 * t + Math.sin(2 * Math.PI * 1240 * t) * 0.6) * envExp(t, 0.001, 0.03) * 0.18
+    const tail = (Math.random() * 2 - 1) * Math.exp(-t * 7) * 0.06
+    out[i] = crack + body + snap + tail
+  }
+  return out
 }
 
 function synthPistol(duration) {
@@ -209,6 +309,7 @@ function synthTerminal(duration) {
 }
 
 const synthById = {
+  rifle: synthRifle,
   pistol: synthPistol,
   linkbeam_pulse: synthPulse,
   linkbeam_link: synthLink,
@@ -268,13 +369,22 @@ async function main() {
   mkdirSync(outDir, { recursive: true })
   mkdirSync(unrealDir, { recursive: true })
   mkdirSync(dclDir, { recursive: true })
+
+  // Named ids regenerate just those clips, so refreshing one cue does not
+  // re-bill or re-roll every other sound.
+  const only = process.argv.slice(2)
+  const selected = only.length ? clips.filter((c) => only.includes(c.id)) : clips
+  if (!selected.length) {
+    throw new Error(`No clips matched: ${only.join(', ')}`)
+  }
+
   const key = readKey()
   const ffmpeg = hasFfmpeg()
   let source = 'local-synth'
   if (key) {
     try {
       process.stdout.write('Trying ElevenLabs sound_generation... ')
-      await generateEleven(key, clips[0], 'mp3_44100_128')
+      await generateEleven(key, selected[0], 'mp3_44100_128')
       source = 'elevenlabs'
       console.log('ok')
     } catch (err) {
@@ -285,9 +395,9 @@ async function main() {
     console.log('No ELEVENLABS_API_KEY, using local synth')
   }
 
-  console.log(`Generating ${clips.length} clips via ${source} (ffmpeg=${ffmpeg})`)
+  console.log(`Generating ${selected.length} clips via ${source} (ffmpeg=${ffmpeg})`)
 
-  for (const clip of clips) {
+  for (const clip of selected) {
     process.stdout.write(`  ${clip.id}... `)
     if (source === 'elevenlabs') {
       const mp3 = await generateEleven(key, clip, 'mp3_44100_128')
@@ -302,8 +412,11 @@ async function main() {
         const pcm = await generateEleven(key, clip, 'pcm_24000')
         wav = pcmToWav(pcm)
       }
+      if (!clip.loop) {
+        wav = tidyOneShot(wav)
+      }
       writeClipFiles(clip.id, wav, mp3)
-      console.log('ok')
+      console.log(`ok (${(wav.length / (2 * SR)).toFixed(2)}s)`)
       continue
     }
 

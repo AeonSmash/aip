@@ -2,7 +2,7 @@
 
 An open semantic interoperability protocol for independent games and real-time 3D worlds.
 
-[Live loop (DCL → Unreal → web)](https://youtu.be/HhmK0dzFoU4) · [Conceptual explainer](https://youtu.be/3D2cgt-ajlE) · [Public draft](#public-draft-01)
+[Live loop (DCL → Unreal → web)](https://youtu.be/FxUgI1HTrGQ) · [Conceptual explainer](https://youtu.be/3D2cgt-ajlE) · [Public draft](#public-draft-01)
 
 A source world can describe an object, event, or identity. A destination world decides what that description means locally. Worlds do not share a database, engine, economy, or blockchain.
 
@@ -51,7 +51,7 @@ This repository is the public presentation of AIP. It is intentionally small. In
 | [`explainer/index.html`](explainer/index.html) | 90-second visual walkthrough |
 | [`CHANGELOG.md`](CHANGELOG.md) | Public presentation history |
 
-Watch the live three-world loop: https://youtu.be/HhmK0dzFoU4  
+Watch the live three-world loop: https://youtu.be/FxUgI1HTrGQ  
 Conceptual explainer: https://youtu.be/3D2cgt-ajlE
 
 ### Quick CLI loop
@@ -95,13 +95,13 @@ No particular engine or world is a requirement of AIP Core. Unreal, Decentraland
 
 ## Current status
 
-**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.15).**
+**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.16).**
 
 - TypeScript core validates and maps envelopes (`npm test` green); `@aeonsmash/aip` **0.5.9**
 - File exchange contract under `exchange/`
 - Web CRT switch emits `signal.breaker` onto the envelope board; Unreal maps it to LinkBeam
 - Unreal 5.8 First Person reference (PIE): start with pistol, hidden terminal until `signal.box`, AIP-unlocked LinkBeam, core tower, NPC waves
-- Live three-world loop: DCL box → Unreal terminal → public CRT breaker → Unreal LinkBeam ([video](https://youtu.be/HhmK0dzFoU4)); Unreal sigil → Decentraland museum mapping via CLI
+- Live three-world loop: DCL box → Unreal terminal → public CRT breaker → Unreal LinkBeam ([video](https://youtu.be/FxUgI1HTrGQ)); Unreal sigil → Decentraland museum mapping via CLI
 
 Existing AeonSmash work is how the problem was found, not a dependency of the protocol.
 

@@ -13,8 +13,8 @@ AAIPStarterPistol::AAIPStarterPistol()
 	ViewObjFile = TEXT("AIP/Weapons/LightningGun.obj");
 	ViewScale = FVector(1.f);
 	ViewOffset = FVector(22.f, 10.f, -8.f);
-	// Blender FBX is Y-forward; camera is X-forward.
-	ViewRotation = FRotator(0.f, -90.f, 0.f);
+	// Grip origin, barrel on +X after the extract/import yaw. No corrective tilt.
+	ViewRotation = FRotator::ZeroRotator;
 }
 
 void AAIPStarterPistol::StartFire()
@@ -54,11 +54,18 @@ void AAIPStarterPistol::StartFire()
 	Params.Instigator = Cast<APawn>(GetOwner());
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	const FVector SpawnLoc = Start + Direction * MuzzleOffset;
+	// Leave from the barrel tip but still converge on the crosshair.
+	const FVector SpawnLoc = GetMuzzleWorldLocation();
+	FVector ShotDir = (End - SpawnLoc).GetSafeNormal();
+	if (ShotDir.IsNearlyZero())
+	{
+		ShotDir = Direction;
+	}
+
 	AAIPPistolSlugProjectile* Shot = World->SpawnActor<AAIPPistolSlugProjectile>(
 		AAIPPistolSlugProjectile::StaticClass(),
 		SpawnLoc,
-		Direction.Rotation(),
+		ShotDir.Rotation(),
 		Params);
 
 	if (!Shot)
@@ -67,6 +74,7 @@ void AAIPStarterPistol::StartFire()
 	}
 
 	LastFireTime = Now;
-	Shot->InitShot(Direction, Damage, GetOwner(), Range);
-	AIPSfx::Play(this, TEXT("pistol"), 0.42f);
+	Shot->InitShot(ShotDir, Damage, GetOwner(), Range);
+	AddRecoil();
+	AIPSfx::Play(this, TEXT("rifle"), 0.5f);
 }

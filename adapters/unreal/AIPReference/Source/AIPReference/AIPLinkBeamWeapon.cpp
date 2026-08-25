@@ -13,7 +13,7 @@ AAIPLinkBeamWeapon::AAIPLinkBeamWeapon()
 	ViewObjFile = TEXT("AIP/Weapons/LinkGun.obj");
 	ViewScale = FVector(1.f);
 	ViewOffset = FVector(24.f, 10.f, -8.f);
-	ViewRotation = FRotator(0.f, -90.f, 0.f);
+	ViewRotation = FRotator::ZeroRotator;
 	bUnlocked = false;
 
 	LinkHum = CreateDefaultSubobject<UAudioComponent>(TEXT("LinkHum"));
@@ -125,11 +125,18 @@ void AAIPLinkBeamWeapon::TryLaunch(bool bRepair)
 	Params.Instigator = Cast<APawn>(GetOwner());
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	const FVector SpawnLoc = Start + Direction * MuzzleOffset;
+	// Leave from the barrel tip but still converge on the crosshair.
+	const FVector SpawnLoc = GetMuzzleWorldLocation();
+	FVector ShotDir = (End - SpawnLoc).GetSafeNormal();
+	if (ShotDir.IsNearlyZero())
+	{
+		ShotDir = Direction;
+	}
+
 	AAIPLinkSphereProjectile* Shot = World->SpawnActor<AAIPLinkSphereProjectile>(
 		AAIPLinkSphereProjectile::StaticClass(),
 		SpawnLoc,
-		Direction.Rotation(),
+		ShotDir.Rotation(),
 		Params);
 
 	if (!Shot)
@@ -138,7 +145,8 @@ void AAIPLinkBeamWeapon::TryLaunch(bool bRepair)
 	}
 
 	PulseTimer = PulseInterval;
-	Shot->InitShot(Direction, bRepair, DamagePerShot, RepairPerShot, GetOwner(), Range);
+	Shot->InitShot(ShotDir, bRepair, DamagePerShot, RepairPerShot, GetOwner(), Range);
+	AddRecoil(0.6f);
 	if (!bRepair)
 	{
 		AIPSfx::Play(this, TEXT("linkbeam_pulse"), 0.48f);
