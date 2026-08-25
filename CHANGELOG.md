@@ -9,6 +9,24 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/) for the presentation/package
 surface (`MAJOR.MINOR.PATCH`).
 
+## [0.5.17] - 2026-08-24
+
+Epic funding copy names only the leftover work. Envelope schema remains **0.1**.
+
+### Changed
+
+- Grant “how funds are used” is four leftovers: drop-in Unreal plugin, frozen
+  envelope + conformance folder, reverse path that runs in a second live
+  destination, and a second local interpretation of the same envelope.
+- Tight deliverables list matches that paragraph. No new protocol, marketplace,
+  automated ingest, extra engines, or AIP Core / Cesium / NLnet.
+
+### Notes
+
+- Protocol envelope version is still **0.1**.
+- Plugin **0.5.14** and `@aeonsmash/aip` **0.5.9** are unchanged. This is a
+  presentation / submission-copy bump.
+
 ## [0.5.16] - 2026-08-24
 
 Tighter grant-media cut, and the Unreal viewmodel now aims, kicks, and fires

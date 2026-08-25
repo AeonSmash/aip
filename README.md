@@ -95,7 +95,7 @@ No particular engine or world is a requirement of AIP Core. Unreal, Decentraland
 
 ## Current status
 
-**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.16).**
+**Prototype / in development — playable one-tower Unreal reference (presentation 0.5.17).**
 
 - TypeScript core validates and maps envelopes (`npm test` green); `@aeonsmash/aip` **0.5.9**
 - File exchange contract under `exchange/`
