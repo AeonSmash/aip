@@ -50,8 +50,18 @@ exchange/outbox/*.aip.json
 
 # Map FBX exceeds GitHub's 100MB blob limit (aeonicMap.fbx ~104MB). Keep local.
 adapters/unreal/art/map/*.fbx
-adapters/unreal/AIPReference/Content/Maps/aeonicMap.uasset
-adapters/unreal/AIPReference/Content/Maps/Mesh_0_002.uasset
+
+# Everything under Content/Maps is imported from that FBX. The two 114MB uassets
+# would be rejected outright, and the rest is useless without them, so the whole
+# imported folder stays local rather than half of it.
+adapters/unreal/AIPReference/Content/Maps/
+
+# FBX embedded-media folders: textures Unreal extracts next to a .fbx. Derived
+# from art sources that are themselves too large to track (~115MB combined).
+*.fbm/
+
+__pycache__/
+*.pyc
 
 # Decentraland preview build
 adapters/decentraland/bin/
